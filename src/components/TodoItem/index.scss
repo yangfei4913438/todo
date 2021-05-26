@@ -1,0 +1,25 @@
+.todo_item {
+  line-height: 25px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  margin-bottom: 3px;
+  display: flex;
+  justify-content: space-between;
+
+  .todo_item_level {
+    width: 30px;
+  }
+  .todo_item_title {
+    flex-grow: 1;
+  }
+}
+
+.todo_item_active {
+  background-color: lightblue;
+}
+
+.todo_item_in_active {
+  background-color: lightgray;
+}

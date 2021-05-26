@@ -1,0 +1,28 @@
+.header {
+  line-height: 60px;
+  background: #333;
+  display: flex;
+  justify-content: center;
+
+  input {
+    font-size: 14px;
+    color: #111;
+  }
+}
+
+.header_content {
+  width: 600px;
+  font-size: 24px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header_input {
+  width: 360px;
+  line-height: 24px;
+  border-radius: 5px;
+  padding: 0 10px;
+  outline: none; /* 禁止外部的聚焦边框 */
+}

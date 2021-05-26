@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-function App() {
+// 首页组件
+import TodoList from './pages/TodoList';
+// 其他组件，懒加载
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Suspense fallback={<div>加载中...</div>}>
+        <Switch>
+          <Route path={'/'} exact component={TodoList} />
+          <Route path={'*'} component={NotFound} />
+        </Switch>
+      </Suspense>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
