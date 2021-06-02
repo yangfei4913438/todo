@@ -1,6 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { actions } from './store';
 import shortid from 'shortid';
 import { sortArrayByKey } from '../../utils/dataHelper';
 
@@ -9,28 +7,31 @@ import List from '../../components/List';
 
 import { todoItem, todoLevel } from './variables';
 
+// redux
+import { connect, ConnectedProps } from 'react-redux';
+import { Dispatch, bindActionCreators } from 'redux';
+import { actions } from './store';
+
 // 映射state
-const mapState = (state: { todo: any }) => {
-  // 使用这种方法，为了方便有需要全局state的操作
-  const { todo } = state;
+const mapState = ({ todo }: IStore) => {
   return {
     value: todo.inputValue,
   };
 };
 // 映射action
-const mapDispatch = (dispatch: (arg: { type: string; value: string }) => void) => ({
-  // 修改输入框内容
-  handleInputChange(value: string) {
-    dispatch(actions.changeInputValue(value));
-  },
+const mapDispatch = (dispatch: Dispatch) => ({
+  // 如果有多个actions, 可以先合并到一起
+  actions: bindActionCreators(actions, dispatch),
 });
 /**
  * 封装一下连接方法
  * 注意：这里的 connect 不能被封装成函数返回值，否则运行报错！
  * */
 const connStore = connect(mapState, mapDispatch);
+// 推断出redux传入参数类型
+type propsFromRedux = ConnectedProps<typeof connStore>;
 
-const TodoList: React.FC<MapStateToProps<any, any> & MapDispatchToProps<any, any>> = ({ handleInputChange, value }) => {
+const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
   const [actives, setActives] = useState<todoItem[]>([]);
   const [inActives, setInActives] = useState<todoItem[]>([]);
 
@@ -94,7 +95,7 @@ const TodoList: React.FC<MapStateToProps<any, any> & MapDispatchToProps<any, any
 
   return (
     <div>
-      <Header value={value} handleInputChange={handleInputChange} addItem={addItem} />
+      <Header value={value} changeInputValue={actions.changeInputValue} addItem={addItem} />
       <List actives={actives} inActives={inActives} changeLevel={changeLevel} moveItem={moveItem} />
     </div>
   );

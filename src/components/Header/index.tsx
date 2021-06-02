@@ -3,23 +3,24 @@ import './index.scss';
 
 interface HeaderProps {
   value: string;
-  handleInputChange: (value: string) => void;
+  changeInputValue: (value: string) => void;
   addItem: (value: string) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ value, addItem, handleInputChange }) => {
+const Header: React.FC<HeaderProps> = ({ value, addItem, changeInputValue }) => {
   // 回车添加任务
   const handleInputKeyUp = useCallback(
     (e: KeyboardEvent) => {
       // 13表示回车键
       if (e.keyCode === 13 && value) {
+        console.log('input:', value);
         // 调用回调
         addItem(value);
         // 重置为空
-        handleInputChange('');
+        changeInputValue('');
       }
     },
-    [value, addItem, handleInputChange]
+    [value, addItem, changeInputValue]
   );
 
   return (
@@ -30,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ value, addItem, handleInputChange }) =>
           className={'header_input'}
           value={value}
           placeholder={'请输入Todo'}
-          onChange={e => handleInputChange(e.target.value)}
+          onChange={e => changeInputValue(e.target.value)}
           onKeyUp={handleInputKeyUp}
         />
       </div>
