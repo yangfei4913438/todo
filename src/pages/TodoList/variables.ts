@@ -8,6 +8,7 @@ export type todoItem = {
   id: string;
   title: string;
   level: todoLevel;
+  time: number;
 };
 
 export const ItemType = {

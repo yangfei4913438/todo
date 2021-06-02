@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import shortid from 'shortid';
-import { sortArrayByKey } from '../../utils/dataHelper';
 
 import Header from '../../components/Header';
 import List from '../../components/List';
@@ -41,6 +40,7 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
         id: shortid.generate(),
         title: val,
         level: todoLevel.init,
+        time: new Date().getTime(),
       };
       setActives([...actives, item]);
     },
@@ -77,17 +77,28 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
         setInActives([...inActives, { ...item, level }]);
       } else {
         // 更新level
-        const arr = actives.map(row => {
-          if (row.id === item.id) {
-            return {
-              ...row,
-              level,
-            };
-          }
-          return row;
-        });
+        const arr = actives
+          .map(row => {
+            if (row.id === item.id) {
+              return {
+                ...row,
+                level,
+              };
+            }
+            return row;
+          })
+          // 先根据 等级进行排序，然后再按创建时间进行排序
+          .sort((a: todoItem, b: todoItem) => {
+            if (a.level === b.level) {
+              // 大的在后面
+              return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
+            } else {
+              // 大的在前面
+              return a.level > b.level ? -1 : 1;
+            }
+          });
         // 更新可用数组
-        setActives(sortArrayByKey(arr, 'level', 'desc'));
+        setActives(arr);
       }
     },
     [actives, setActives, inActives, setInActives]
