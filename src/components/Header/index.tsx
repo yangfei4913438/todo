@@ -13,7 +13,6 @@ const Header: React.FC<HeaderProps> = ({ value, addItem, changeInputValue }) => 
     (e: KeyboardEvent) => {
       // 13表示回车键
       if (e.keyCode === 13 && value) {
-        console.log('input:', value);
         // 调用回调
         addItem(value);
         // 重置为空
