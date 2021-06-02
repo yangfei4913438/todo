@@ -47,61 +47,63 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
     [actives, setActives]
   );
 
+  const sortArray = useCallback((arr: todoItem[]) => {
+    // 先根据 等级进行排序，然后再按创建时间进行排序
+    return arr.sort((a: todoItem, b: todoItem) => {
+      if (a.level === b.level) {
+        // 大的在后面
+        return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
+      } else {
+        // 大的在前面
+        return a.level > b.level ? -1 : 1;
+      }
+    });
+  }, []);
+
   const moveItem = useCallback(
     (item: todoItem, targetType: string) => {
       if (targetType === 'inActive') {
         const ids = inActives.map(o => o.id);
         if (ids.includes(item.id)) return;
         // 更新可用数组
-        setActives(actives.filter(row => row.id !== item.id));
+        setActives(sortArray(actives.filter(row => row.id !== item.id)));
         // 更新不可用数组
-        setInActives([...inActives, { ...item, level: todoLevel.end }]);
+        setInActives(sortArray([...inActives, { ...item, level: todoLevel.end }]));
       } else {
         const ids = actives.map(o => o.id);
         if (ids.includes(item.id)) return;
         // 更新不可用数组
-        setInActives(inActives.filter(row => row.id !== item.id));
+        setInActives(sortArray(inActives.filter(row => row.id !== item.id)));
         // 更新可用数组
-        setActives([...actives, { ...item, level: todoLevel.init }]);
+        setActives(sortArray([...actives, { ...item, level: todoLevel.init }]));
       }
     },
-    [inActives, actives, setActives, setInActives]
+    [inActives, actives, setActives, setInActives, sortArray]
   );
 
   const changeLevel = useCallback(
     (item: todoItem, level: todoLevel) => {
       if (level === todoLevel.end) {
         // 更新可用数组
-        setActives(actives.filter(row => row.id !== item.id));
+        setActives(sortArray(actives.filter(row => row.id !== item.id)));
         // 更新不可用数组
-        setInActives([...inActives, { ...item, level }]);
+        setInActives(sortArray([...inActives, { ...item, level }]));
       } else {
         // 更新level
-        const arr = actives
-          .map(row => {
-            if (row.id === item.id) {
-              return {
-                ...row,
-                level,
-              };
-            }
-            return row;
-          })
-          // 先根据 等级进行排序，然后再按创建时间进行排序
-          .sort((a: todoItem, b: todoItem) => {
-            if (a.level === b.level) {
-              // 大的在后面
-              return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
-            } else {
-              // 大的在前面
-              return a.level > b.level ? -1 : 1;
-            }
-          });
+        const arr = actives.map(row => {
+          if (row.id === item.id) {
+            return {
+              ...row,
+              level,
+            };
+          }
+          return row;
+        });
         // 更新可用数组
-        setActives(arr);
+        setActives(sortArray(arr));
       }
     },
-    [actives, setActives, inActives, setInActives]
+    [actives, setActives, inActives, setInActives, sortArray]
   );
 
   return (
