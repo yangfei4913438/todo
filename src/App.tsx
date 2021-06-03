@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 // 首页组件
-import TodoList from './pages/TodoList';
+import TodoList from './pages/TodoList/todoWrapper';
 // 其他组件，懒加载
 const NotFound = lazy(() => import('./pages/NotFound'));
 

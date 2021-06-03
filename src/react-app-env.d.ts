@@ -17,3 +17,15 @@ declare interface IState {
 declare interface IStore {
   todo: IState;
 }
+
+// 返回对象
+declare interface IReducer {
+  type: string;
+  value: any;
+}
+
+// actions 定义
+declare interface IActions {
+  changeInputValue: (value: string) => IReducer;
+  changeTodoList: (value: todoItem[]) => IReducer;
+}

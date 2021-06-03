@@ -6,32 +6,13 @@ import List from '../../components/List';
 
 import { todoLevel } from './variables';
 
-// redux
-import { connect, ConnectedProps } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
-import { actions } from './store';
+interface IProps {
+  actions: IActions;
+  value: string;
+  items: todoItem[];
+}
 
-// 映射state
-const mapState = ({ todo }: IStore) => {
-  return {
-    value: todo.inputValue,
-    items: todo.items,
-  };
-};
-// 映射action
-const mapDispatch = (dispatch: Dispatch) => ({
-  // 如果有多个actions, 可以先合并到一起
-  actions: bindActionCreators(actions, dispatch),
-});
-/**
- * 封装一下连接方法
- * 注意：这里的 connect 不能被封装成函数返回值，否则运行报错！
- * */
-const connStore = connect(mapState, mapDispatch);
-// 推断出redux传入参数类型
-type propsFromRedux = ConnectedProps<typeof connStore>;
-
-const TodoList: React.FC<propsFromRedux> = ({ actions, value, items = [] }) => {
+const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
   const { changeTodoList } = actions;
 
   const addItem = useCallback(
@@ -125,4 +106,4 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value, items = [] }) => {
   );
 };
 
-export default connStore(TodoList);
+export default TodoList;
