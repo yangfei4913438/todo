@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import App from './App';
 import store from './store';
-import './styles/reset.css';
+import './styles/reset.scss';
 import 'antd/dist/antd.css';
 
 import { DndProvider } from 'react-dnd';

@@ -8,9 +8,9 @@ import { DropTarget } from 'react-dnd';
 
 interface TodoItemsProps {
   type: string;
-  list: todoItem[];
-  changeLevel: (item: todoItem, level: number) => void;
-  moveItem: (item: todoItem, targetType: string) => void;
+  list: ITodoItem[];
+  changeLevel: (item: ITodoItem, level: number) => void;
+  moveItem: (item: ITodoItem, targetType: string) => void;
   connectDropTarget: ConnectDropTarget;
   canDrop: boolean;
   isOver: boolean;

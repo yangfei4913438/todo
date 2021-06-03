@@ -8,7 +8,7 @@ const actions = {
     value,
   }),
   // 修改todo列表的值
-  changeTodoList: (value: todoItem[]): IReducer => ({
+  changeTodoList: (value: ITodoItem[]): IReducer => ({
     type: types.CHANGE_TODO_LIST_VALUE,
     value,
   }),

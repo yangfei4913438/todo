@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
 // todolist 应用的类型定义
-declare interface todoItem {
+declare interface ITodoItem {
   id: string;
   title: string;
   level: number;

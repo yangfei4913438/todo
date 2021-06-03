@@ -3,7 +3,7 @@ import './index.scss';
 
 interface HeaderProps {
   value: string;
-  changeInputValue: (value: string) => void;
+  changeInputValue: (value: string) => IReducer;
   addItem: (value: string) => void;
 }
 

@@ -9,15 +9,15 @@ import { todoLevel } from './variables';
 interface IProps {
   actions: IActions;
   value: string;
-  items: todoItem[];
+  items: ITodoItem[];
 }
 
 const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
-  const { changeTodoList } = actions;
+  const { changeTodoList }: IActions = actions;
 
   const addItem = useCallback(
-    (val: string) => {
-      const item: todoItem = {
+    (val: string): void => {
+      const item: ITodoItem = {
         id: shortid.generate(),
         title: val,
         level: todoLevel.init,
@@ -28,9 +28,9 @@ const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
     [items, changeTodoList]
   );
 
-  const sortArray = useCallback((arr: todoItem[]) => {
+  const sortArray = useCallback((arr: ITodoItem[]): ITodoItem[] => {
     // 先根据 等级进行排序，然后再按创建时间进行排序
-    return arr.sort((a: todoItem, b: todoItem) => {
+    return arr.sort((a: ITodoItem, b: ITodoItem) => {
       if (a.level === b.level) {
         // 大的在后面
         return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
@@ -43,7 +43,7 @@ const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
 
   // 拖拽会触发
   const moveItem = useCallback(
-    (item: todoItem, targetType: string) => {
+    (item: ITodoItem, targetType: string): void => {
       // 默认是完成状态
       let level = todoLevel.end;
       // 相同的移动
@@ -59,7 +59,7 @@ const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
         level = todoLevel.init;
       }
       // 更新数组
-      const arr: todoItem[] = items.map(row => {
+      const arr: ITodoItem[] = items.map(row => {
         if (row.id === item.id) {
           return {
             ...row,
@@ -76,9 +76,9 @@ const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
 
   // 修改todo状态会触发
   const changeLevel = useCallback(
-    (item: todoItem, level: todoLevel) => {
+    (item: ITodoItem, level: todoLevel): void => {
       // 更新数组
-      const arr: todoItem[] = items.map(row => {
+      const arr: ITodoItem[] = items.map(row => {
         if (row.id === item.id) {
           return {
             ...row,

@@ -10,8 +10,8 @@ import { DragSource, DragSourceConnector } from 'react-dnd';
 
 interface TodoItemProps {
   type: string;
-  item: todoItem;
-  changeLevel?: (item: todoItem, level: number) => void;
+  item: ITodoItem;
+  changeLevel?: (item: ITodoItem, level: number) => void;
   isDragging: boolean;
   connectDragSource: ConnectDragSource;
 }

@@ -3,10 +3,10 @@ import TodoItems from '../TodoItems';
 import './index.scss';
 
 interface ListProps {
-  actives: todoItem[];
-  inActives: todoItem[];
-  changeLevel: (item: todoItem, level: number) => void;
-  moveItem: (item: todoItem, targetType: string) => void;
+  actives: ITodoItem[];
+  inActives: ITodoItem[];
+  changeLevel: (item: ITodoItem, level: number) => void;
+  moveItem: (item: ITodoItem, targetType: string) => void;
 }
 
 const List: React.FC<ListProps> = ({ actives, inActives, changeLevel, moveItem }) => {
