@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoItem from '../TodoItem';
 import classNames from 'classnames';
-import { todoItem, todoLevel, ItemType } from '../../pages/TodoList/variables';
+import { ItemType } from '../../pages/TodoList/variables';
 
 import { ConnectDropTarget } from 'react-dnd';
 import { DropTarget } from 'react-dnd';
@@ -9,7 +9,7 @@ import { DropTarget } from 'react-dnd';
 interface TodoItemsProps {
   type: string;
   list: todoItem[];
-  changeLevel: (item: todoItem, level: todoLevel) => void;
+  changeLevel: (item: todoItem, level: number) => void;
   moveItem: (item: todoItem, targetType: string) => void;
   connectDropTarget: ConnectDropTarget;
   canDrop: boolean;

@@ -3,7 +3,7 @@ import './index.scss';
 import classNames from 'classnames';
 import { Dropdown, Menu } from 'antd';
 import { CheckCircleTwoTone, CloudTwoTone, SyncOutlined } from '@ant-design/icons';
-import { todoItem, todoLevel, ItemType } from '../../pages/TodoList/variables';
+import { ItemType, todoLevel } from '../../pages/TodoList/variables';
 
 import { ConnectDragSource, DragSourceMonitor } from 'react-dnd';
 import { DragSource, DragSourceConnector } from 'react-dnd';
@@ -11,7 +11,7 @@ import { DragSource, DragSourceConnector } from 'react-dnd';
 interface TodoItemProps {
   type: string;
   item: todoItem;
-  changeLevel?: (item: todoItem, level: todoLevel) => void;
+  changeLevel?: (item: todoItem, level: number) => void;
   isDragging: boolean;
   connectDragSource: ConnectDragSource;
 }
@@ -27,7 +27,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ type, item, changeLevel = () => {},
   );
 
   const handleClick = useCallback(
-    (level: todoLevel) => {
+    (level: number) => {
       if (type === 'active') {
         changeLevel(item, level);
       }
@@ -35,7 +35,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ type, item, changeLevel = () => {},
     [type, item, changeLevel]
   );
 
-  const renderIcon = useCallback((level: todoLevel, needFont: boolean = false) => {
+  const renderIcon = useCallback((level: number, needFont: boolean = false) => {
     let Icon = <CloudTwoTone />;
     let font = '初始化';
     switch (level) {

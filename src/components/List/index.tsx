@@ -1,12 +1,11 @@
 import React from 'react';
-import { todoItem, todoLevel } from '../../pages/TodoList/variables';
 import TodoItems from '../TodoItems';
 import './index.scss';
 
 interface ListProps {
   actives: todoItem[];
   inActives: todoItem[];
-  changeLevel: (item: todoItem, level: todoLevel) => void;
+  changeLevel: (item: todoItem, level: number) => void;
   moveItem: (item: todoItem, targetType: string) => void;
 }
 

@@ -1,20 +1,21 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import shortid from 'shortid';
 
 import Header from '../../components/Header';
 import List from '../../components/List';
 
-import { todoItem, todoLevel } from './variables';
+import { todoLevel } from './variables';
 
 // redux
 import { connect, ConnectedProps } from 'react-redux';
-import { Dispatch, bindActionCreators } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { actions } from './store';
 
 // 映射state
 const mapState = ({ todo }: IStore) => {
   return {
     value: todo.inputValue,
+    items: todo.items,
   };
 };
 // 映射action
@@ -30,9 +31,8 @@ const connStore = connect(mapState, mapDispatch);
 // 推断出redux传入参数类型
 type propsFromRedux = ConnectedProps<typeof connStore>;
 
-const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
-  const [actives, setActives] = useState<todoItem[]>([]);
-  const [inActives, setInActives] = useState<todoItem[]>([]);
+const TodoList: React.FC<propsFromRedux> = ({ actions, value, items = [] }) => {
+  const { changeTodoList } = actions;
 
   const addItem = useCallback(
     (val: string) => {
@@ -42,9 +42,9 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
         level: todoLevel.init,
         time: new Date().getTime(),
       };
-      setActives([...actives, item]);
+      changeTodoList([...items, item]);
     },
-    [actives, setActives]
+    [items, changeTodoList]
   );
 
   const sortArray = useCallback((arr: todoItem[]) => {
@@ -60,56 +60,67 @@ const TodoList: React.FC<propsFromRedux> = ({ actions, value }) => {
     });
   }, []);
 
+  // 拖拽会触发
   const moveItem = useCallback(
     (item: todoItem, targetType: string) => {
+      // 默认是完成状态
+      let level = todoLevel.end;
+      // 相同的移动
       if (targetType === 'inActive') {
+        const inActives = items.filter(o => o.level === todoLevel.end);
         const ids = inActives.map(o => o.id);
         if (ids.includes(item.id)) return;
-        // 更新可用数组
-        setActives(sortArray(actives.filter(row => row.id !== item.id)));
-        // 更新不可用数组
-        setInActives(sortArray([...inActives, { ...item, level: todoLevel.end }]));
       } else {
-        const ids = actives.map(o => o.id);
+        const list = items.filter(o => o.level !== todoLevel.end);
+        const ids = list.map(o => o.id);
         if (ids.includes(item.id)) return;
-        // 更新不可用数组
-        setInActives(sortArray(inActives.filter(row => row.id !== item.id)));
-        // 更新可用数组
-        setActives(sortArray([...actives, { ...item, level: todoLevel.init }]));
+        // 正常的标记为初始
+        level = todoLevel.init;
       }
+      // 更新数组
+      const arr: todoItem[] = items.map(row => {
+        if (row.id === item.id) {
+          return {
+            ...row,
+            level,
+          };
+        }
+        return row;
+      });
+      // 更新不可用数组
+      changeTodoList(sortArray(arr));
     },
-    [inActives, actives, setActives, setInActives, sortArray]
+    [items, changeTodoList, sortArray]
   );
 
+  // 修改todo状态会触发
   const changeLevel = useCallback(
     (item: todoItem, level: todoLevel) => {
-      if (level === todoLevel.end) {
-        // 更新可用数组
-        setActives(sortArray(actives.filter(row => row.id !== item.id)));
-        // 更新不可用数组
-        setInActives(sortArray([...inActives, { ...item, level }]));
-      } else {
-        // 更新level
-        const arr = actives.map(row => {
-          if (row.id === item.id) {
-            return {
-              ...row,
-              level,
-            };
-          }
-          return row;
-        });
-        // 更新可用数组
-        setActives(sortArray(arr));
-      }
+      // 更新数组
+      const arr: todoItem[] = items.map(row => {
+        if (row.id === item.id) {
+          return {
+            ...row,
+            level,
+          };
+        }
+        return row;
+      });
+      // 更新不可用数组
+      changeTodoList(sortArray(arr));
     },
-    [actives, setActives, inActives, setInActives, sortArray]
+    [items, changeTodoList, sortArray]
   );
 
   return (
     <div>
       <Header value={value} changeInputValue={actions.changeInputValue} addItem={addItem} />
-      <List actives={actives} inActives={inActives} changeLevel={changeLevel} moveItem={moveItem} />
+      <List
+        actives={items.filter(o => o.level !== todoLevel.end)}
+        inActives={items.filter(o => o.level === todoLevel.end)}
+        changeLevel={changeLevel}
+        moveItem={moveItem}
+      />
     </div>
   );
 };

@@ -3,13 +3,22 @@ import types from './types';
 // 定义初始值
 const initialState = {
   inputValue: '',
+  items: [],
 };
 
 // 定义reducer
-const reducer = (state = initialState, action: { type: string; value: string }): IState => {
+const reducer = (state = initialState, action: { type: string; value: any }): IState => {
   switch (action.type) {
     case types.CHANGE_INPUT_VALUE:
-      return { inputValue: action.value };
+      return {
+        ...state,
+        inputValue: action.value,
+      };
+    case types.CHANGE_TODO_LIST_VALUE:
+      return {
+        ...state,
+        items: action.value,
+      };
     default:
       return state;
   }
