@@ -10,7 +10,7 @@ declare interface ITodoItem {
 
 declare interface IState {
   inputValue: string;
-  items: todoItem[];
+  items: ITodoItem[];
 }
 
 // 全局 store 的类型定义
@@ -27,5 +27,5 @@ declare interface IReducer {
 // actions 定义
 declare interface IActions {
   changeInputValue: (value: string) => IReducer;
-  changeTodoList: (value: todoItem[]) => IReducer;
+  changeTodoList: (value: ITodoItem[]) => IReducer;
 }
