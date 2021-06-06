@@ -7,7 +7,7 @@ const initialState = {
 };
 
 // 定义reducer
-const reducer = (state = initialState, action: { type: string; value: any }): IState => {
+const reducer = (state = initialState, action: IReducer): IState => {
   switch (action.type) {
     case types.CHANGE_INPUT_VALUE:
       return {

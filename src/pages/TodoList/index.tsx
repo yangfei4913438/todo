@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import shortid from 'shortid';
 
 import Header from '../../components/Header';
@@ -13,37 +13,34 @@ interface IProps {
 }
 
 const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
-  const { changeTodoList }: IActions = actions;
+  const { initTodoList, postItem, patchItem }: IActions = actions;
 
+  useEffect(() => {
+    // 如果当前不存在，就去加载远程的
+    if (!items?.length) {
+      initTodoList();
+    }
+  }, [items, initTodoList]);
+
+  // 新增一个todo
   const addItem = useCallback(
-    (val: string): void => {
-      const item: ITodoItem = {
+    async (val: string) => {
+      // 新增对象
+      await postItem({
         id: shortid.generate(),
         title: val,
         level: todoLevel.init,
         time: new Date().getTime(),
-      };
-      changeTodoList([...items, item]);
+      });
+      // 重新获取数组
+      await initTodoList();
     },
-    [items, changeTodoList]
+    [postItem, initTodoList]
   );
-
-  const sortArray = useCallback((arr: ITodoItem[]): ITodoItem[] => {
-    // 先根据 等级进行排序，然后再按创建时间进行排序
-    return arr.sort((a: ITodoItem, b: ITodoItem) => {
-      if (a.level === b.level) {
-        // 大的在后面
-        return a.time > b.time ? 1 : a.time < b.time ? -1 : 0;
-      } else {
-        // 大的在前面
-        return a.level > b.level ? -1 : 1;
-      }
-    });
-  }, []);
 
   // 拖拽会触发
   const moveItem = useCallback(
-    (item: ITodoItem, targetType: string): void => {
+    async (item: ITodoItem, targetType: string) => {
       // 默认是完成状态
       let level = todoLevel.end;
       // 相同的移动
@@ -58,39 +55,23 @@ const TodoList: React.FC<IProps> = ({ actions, value, items = [] }) => {
         // 正常的标记为初始
         level = todoLevel.init;
       }
-      // 更新数组
-      const arr: ITodoItem[] = items.map(row => {
-        if (row.id === item.id) {
-          return {
-            ...row,
-            level,
-          };
-        }
-        return row;
-      });
-      // 更新不可用数组
-      changeTodoList(sortArray(arr));
+      // 更新数组元素
+      await patchItem(item.id, 'level', level);
+      // 重新获取数组
+      await initTodoList();
     },
-    [items, changeTodoList, sortArray]
+    [items, patchItem, initTodoList]
   );
 
   // 修改todo状态会触发
   const changeLevel = useCallback(
-    (item: ITodoItem, level: todoLevel): void => {
-      // 更新数组
-      const arr: ITodoItem[] = items.map(row => {
-        if (row.id === item.id) {
-          return {
-            ...row,
-            level,
-          };
-        }
-        return row;
-      });
-      // 更新不可用数组
-      changeTodoList(sortArray(arr));
+    async (item: ITodoItem, level: todoLevel) => {
+      // 更新数组元素
+      await patchItem(item.id, 'level', level);
+      // 重新获取数组
+      await initTodoList();
     },
-    [items, changeTodoList, sortArray]
+    [patchItem, initTodoList]
   );
 
   return (

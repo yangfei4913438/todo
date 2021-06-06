@@ -1,9 +1,10 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import reducers from './reducers';
 
 // 中间件数组, 可以填入多个中间件, 例如：redux-thunk
-const middlewares: any[] = [];
+const middlewares: any[] = [thunk];
 
 // 应用中间件
 const middlewareEnhancer = applyMiddleware(...middlewares);
