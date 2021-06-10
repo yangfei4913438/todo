@@ -1,16 +1,18 @@
 // redux
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
+import { Record } from 'immutable';
 import { actions } from './store';
 
 // 被包裹的组件
 import TodoList from './index';
 
 // 映射state
-const mapState = ({ todo }: IStore) => {
+const mapState = (state: Record<IStore>) => {
   return {
-    value: todo.inputValue,
-    items: todo.items,
+    // 取值的时候，需要加上 keyPath
+    value: state.getIn(['todo', 'inputValue']),
+    items: state.getIn(['todo', 'items']),
   };
 };
 

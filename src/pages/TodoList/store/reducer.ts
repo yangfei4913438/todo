@@ -1,24 +1,21 @@
+import { fromJS, Record } from 'immutable';
 import types from './types';
 
-// 定义初始值
-const initialState = {
+// 初始化对象，设置为不可变的immutable对象
+const initialState: Record<IState> = fromJS({
   inputValue: '',
   items: [],
-};
+});
 
 // 定义reducer
-const reducer = (state = initialState, action: IReducer): IState => {
+const reducer = (state: Record<IState> = initialState, action: IReducer): Record<IState> => {
   switch (action.type) {
     case types.CHANGE_INPUT_VALUE:
-      return {
-        ...state,
-        inputValue: action.value,
-      };
+      // 设置值的时候，不需要加上 keyPath, 下同
+      // set 方法返回的是整个 state
+      return state.set('inputValue', action.value);
     case types.CHANGE_TODO_LIST_VALUE:
-      return {
-        ...state,
-        items: action.value,
-      };
+      return state.set('items', action.value);
     default:
       return state;
   }
