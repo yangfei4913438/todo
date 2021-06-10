@@ -3,12 +3,10 @@ import './index.scss';
 import classNames from 'classnames';
 import { Dropdown, Menu } from 'antd';
 import { CheckCircleTwoTone, CloudTwoTone, SyncOutlined } from '@ant-design/icons';
-import { ItemType, todoLevel } from '../../pages/TodoList/variables';
+import { todoLevel } from '../../pages/TodoList/variables';
+import { ConnectDragSource } from 'react-dnd';
 
-import { ConnectDragSource, DragSourceMonitor } from 'react-dnd';
-import { DragSource, DragSourceConnector } from 'react-dnd';
-
-interface TodoItemProps {
+export interface TodoItemProps {
   type: string;
   item: ITodoItem;
   changeLevel?: (item: ITodoItem, level: number) => void;
@@ -87,16 +85,4 @@ const TodoItem: React.FC<TodoItemProps> = ({ type, item, changeLevel = () => {},
   );
 };
 
-export default DragSource(
-  ItemType.item,
-  {
-    beginDrag: (props: TodoItemProps) => {
-      // 拖拽的时候，携带的内容，就是外部传入的数据
-      return props.item;
-    },
-  },
-  (connect: DragSourceConnector, monitor: DragSourceMonitor) => ({
-    connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging(),
-  })
-)(TodoItem);
+export default TodoItem;

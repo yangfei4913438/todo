@@ -1,12 +1,10 @@
 import React from 'react';
-import TodoItem from '../TodoItem';
+import TodoItem from '../TodoItem/todoItemWrapper';
 import classNames from 'classnames';
-import { ItemType } from '../../pages/TodoList/variables';
 
 import { ConnectDropTarget } from 'react-dnd';
-import { DropTarget } from 'react-dnd';
 
-interface TodoItemsProps {
+export interface TodoItemsProps {
   type: string;
   list: ITodoItem[];
   changeLevel: (item: ITodoItem, level: number) => void;
@@ -44,20 +42,4 @@ const TodoItems: React.FC<TodoItemsProps> = ({ type, list, changeLevel, connectD
   );
 };
 
-export default DropTarget(
-  ItemType.item,
-  {
-    drop: (props: TodoItemsProps, monitor) => {
-      if (monitor.didDrop()) {
-        return;
-      }
-      // 这里的props指当前的
-      props.moveItem(monitor.getItem(), props.type);
-    },
-  },
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop(),
-  })
-)(TodoItems);
+export default TodoItems;
