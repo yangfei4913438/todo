@@ -1,6 +1,6 @@
 import { DragSource, DragSourceConnector, DragSourceMonitor, DragSourceSpec } from 'react-dnd';
 import { ItemType } from '../../pages/TodoList/variables';
-import TodoItem, { TodoItemProps } from './index';
+import TodoItem, { TodoItemProps } from './todoItem';
 
 // 拖拽参数
 const sourceSpec: DragSourceSpec<TodoItemProps, ITodoItem, ITodoItem> = {

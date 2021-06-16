@@ -29,6 +29,4 @@ declare interface IActions {
   changeInputValue: (value: string) => IReducer;
   changeTodoList: (value: ITodoItem[]) => IReducer;
   initTodoList: () => void;
-  postItem: (item: ITodoItem) => void;
-  patchItem: (id: string, key: string, value: any) => void;
 }

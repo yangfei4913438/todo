@@ -25,9 +25,24 @@
   "scripts": {
     "start": "concurrently \"react-scripts start\"  \"yarn mock\" ",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "cover": "react-scripts test --coverage --no-cache --watchAll=false --maxWorkers=8",
+    "tdd": "react-scripts test --watch",
+    "test": "react-scripts test --no-cache --watchAll=false --maxWorkers=8",
     "eject": "react-scripts eject",
     "mock": "json-server --watch src/mock/data.json --routes src/mock/routes.json --port 5000 -d 20"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/*Wrapper.tsx",
+      "!src/http/**/*",
+      "!src/mock/**/*",
+      "!src/store/**/*",
+      "!src/**/store/**/index.{js,ts}",
+      "!src/index.tsx",
+      "!src/App.tsx"
+    ]
   },
   "proxy": "http://localhost:5000/",
   "eslintConfig": {
@@ -51,7 +66,9 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
+    "@testing-library/react-hooks": "^7.0.0",
     "@testing-library/user-event": "^12.1.10",
+    "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
@@ -60,12 +77,17 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/redux-devtools-extension": "^2.13.2",
     "@types/redux-immutable": "^4.0.1",
+    "@types/redux-mock-store": "^1.0.2",
     "@types/shortid": "^0.0.29",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
     "concurrently": "^6.2.0",
+    "enzyme": "^3.11.0",
+    "jest-enzyme": "^7.1.2",
     "json-server": "^0.16.3",
     "node-sass": "^6.0.0",
     "prettier": "^2.3.0",
     "react-scripts": "4.0.3",
+    "redux-mock-store": "^1.5.4",
     "typescript": "^4.1.2"
   }
 }
