@@ -12,16 +12,6 @@ const axios = {
       });
     }
   },
-  post(url: string, newData: any) {
-    console.log(url, newData);
-    data = [...data, newData];
-
-    if (url === '/list' || url === '/api/v1/list') {
-      return new Promise((resolve, reject) => {
-        resolve({ data });
-      });
-    }
-  },
   defaults: {
     timeout: 30000,
     baseURL: '/api/v1/',
