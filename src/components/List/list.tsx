@@ -1,6 +1,6 @@
 import React from 'react';
 import TodoItems from '../TodoItems/todoItemsWrapper';
-import './index.scss';
+import './list.scss';
 
 interface ListProps {
   actives: ITodoItem[];

@@ -23,7 +23,7 @@ const TodoItems: React.FC<TodoItemsProps> = ({ type, list, changeLevel, connectD
       })}
     >
       <div className={'todo_list_title'}>
-        <div>{type === 'active' ? '进行中' : '已完成'}</div>
+        <div className={'todo_list_title_text'}>{type === 'active' ? '进行中' : '已完成'}</div>
         <div
           className={classNames({
             todo_list_title_icon_start: type === 'active',

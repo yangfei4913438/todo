@@ -5,7 +5,7 @@ import { Record } from 'immutable';
 import { actions } from './store';
 
 // 被包裹的组件
-import TodoList from './index';
+import TodoList from './todoList';
 
 // 映射state
 const mapState = (state: Record<IStore>) => {

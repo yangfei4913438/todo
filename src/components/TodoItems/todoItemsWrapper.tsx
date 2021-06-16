@@ -1,6 +1,6 @@
 import { DropTarget, DropTargetMonitor, DropTargetConnector, DropTargetSpec } from 'react-dnd';
 import { ItemType } from '../../pages/TodoList/variables';
-import TodoItems, { TodoItemsProps } from './index';
+import TodoItems, { TodoItemsProps } from './todoItems';
 
 // 拖拽参数
 const targetSpec: DropTargetSpec<TodoItemsProps> = {
