@@ -1,50 +1,34 @@
 import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-
+import { DragDropContext } from 'react-beautiful-dnd';
 import { Provider } from 'react-redux';
 
 import TodoList from './todoWrapper';
 
 import store from '../../store';
 import jsonData from '../../mock/data.json';
-import axios from '../../http/http';
 
 let wrapper: ReactWrapper;
-
-// 这里必须使用封装过的库，否则一些自定义配置还需要重新搞一遍
-jest.mock('../../http/http');
-// 抽象出 axios 的 GET 方法。TS 只能这样写，否则没有办法获取扩展 mock 方法
-const mockAxiosGet = axios.get as jest.MockedFunction<typeof axios.get>;
-
+let root: HTMLElement;
 beforeAll(() => {
-  mockAxiosGet.mockImplementation((url: string) => {
-    if (url === '/list' || url === '/api/v1/list') {
-      return new Promise((resolve, reject) => {
-        resolve({ data: jsonData.list });
-      });
-    } else if (url === '/columns' || url === '/api/v1/columns') {
-      return new Promise((resolve, reject) => {
-        resolve({ data: jsonData.columns });
-      });
-    } else {
-      return new Promise((resolve, reject) => {
-        resolve({ data: [] });
-      });
-    }
-  });
-
+  root = document.createElement('div');
+  root.id = 'root';
+  document.body.appendChild(root);
   wrapper = mount(
-    <Provider store={store}>
-      <TodoList />
-    </Provider>
+    <DragDropContext onDragEnd={() => {}}>
+      <Provider store={store}>
+        <TodoList />
+      </Provider>
+    </DragDropContext>,
+    { attachTo: root }
   );
-
-  // console.log(wrapper.debug());
+});
+afterAll(() => {
+  document.body.removeChild(root);
 });
 
-afterAll(() => {
+afterEach(() => {
   jest.clearAllMocks();
-  mockAxiosGet.mockClear();
 });
 
 describe('测试 TodoList 组件', () => {
@@ -60,7 +44,6 @@ describe('测试 TodoList 组件', () => {
     const List = wrapper.find('List');
     expect(List).toHaveProp({ items: jsonData.list });
     expect(List).toHaveProp({ columns: jsonData.columns });
-    // console.log(List.debug());
 
     // 断言有三个列表
     const todoColumns = List.find('TodoColumn');

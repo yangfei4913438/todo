@@ -1,8 +1,5 @@
-import { ThunkDispatch } from 'redux-thunk';
-import { AnyAction } from 'redux';
-import { message } from 'antd';
 import types from './types';
-import todo from '../../../http/todo';
+import jsonData from '../../../mock/data.json';
 
 // 定义actions对象
 const actions = {
@@ -22,24 +19,13 @@ const actions = {
     value,
   }),
   // 初始化todo列表
-  initTodoList: () => {
-    return async (dispatch: ThunkDispatch<IState, any, AnyAction>) => {
-      try {
-        // 初始化需要全部数据，和列数据
-        const [items, columns] = await Promise.all([todo.getTodoItems(), todo.getTodoColumns()]);
-        // 全部todo数据
-        dispatch(actions.changeTodoList(items.data));
-        // 列数据
-        dispatch(actions.changeColumns(columns.data));
-      } catch (err) {
-        // 400 类型的错误，会在这里触发
-        // 一般来说，是在 statusText 属性上写错误原因。直接改成:
-        // message.error('初始化数据失败:', err.statusText);
-        // 下同
-        await message.error('初始化数据失败');
-      }
-    };
-  },
+  initTodoList: (): IReducer => ({
+    type: types.INIT_SYSTEM_DATA,
+    value: {
+      items: jsonData.list,
+      columns: jsonData.columns,
+    },
+  }),
 };
 
 // 导出

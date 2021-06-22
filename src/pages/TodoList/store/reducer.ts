@@ -19,6 +19,12 @@ const reducer = (state: Record<IState> = initialState, action: IReducer): Record
       return state.set('items', action.value);
     case types.CHANGE_COLUMNS_VALUE:
       return state.set('columns', action.value);
+    case types.INIT_SYSTEM_DATA:
+      // 合并多个值
+      return state.merge({
+        items: action.value.items,
+        columns: action.value.columns,
+      });
     default:
       return state;
   }
