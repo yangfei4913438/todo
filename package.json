@@ -23,13 +23,12 @@
     "shortid": "^2.2.16"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\"  \"yarn mock\" ",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "cover": "react-scripts test --coverage --no-cache --watchAll=false --maxWorkers=8",
     "tdd": "react-scripts test --watch",
     "test": "react-scripts test --no-cache --watchAll=false --maxWorkers=8",
-    "eject": "react-scripts eject",
-    "mock": "json-server --watch src/mock/data.json --routes src/mock/routes.json --port 5000 -d 20"
+    "eject": "react-scripts eject"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -44,7 +43,6 @@
       "!src/App.tsx"
     ]
   },
-  "proxy": "http://localhost:5000/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -82,10 +80,8 @@
     "@types/redux-mock-store": "^1.0.2",
     "@types/shortid": "^0.0.29",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
-    "concurrently": "^6.2.0",
     "enzyme": "^3.11.0",
     "jest-enzyme": "^7.1.2",
-    "json-server": "^0.16.3",
     "node-sass": "^6.0.0",
     "prettier": "^2.3.0",
     "react-scripts": "4.0.3",

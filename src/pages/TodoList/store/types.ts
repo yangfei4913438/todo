@@ -6,6 +6,8 @@ const types = {
   CHANGE_TODO_LIST_VALUE: 'CHANGE_TODO_LIST_VALUE',
   // 改变columns
   CHANGE_COLUMNS_VALUE: 'CHANGE_COLUMNS_VALUE',
+  // 初始化系统数据
+  INIT_SYSTEM_DATA: 'INIT_SYSTEM_DATA',
 };
 
 // 导出类型定义对象

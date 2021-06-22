@@ -1,16 +1,15 @@
 import { KeyboardEvent, useCallback } from 'react';
 import { todoLevel, todoLevelType } from '../pages/TodoList/variables';
-import { AxiosPromise } from 'axios';
 
 const useHandleInputKeyUp = (
   newId: string,
   newTime: number,
   value: string,
   columns: IColumn[],
-  postTodoItem: (item: ITodoItem) => AxiosPromise,
-  patchTodoColumn: (columnId: number, taskIds: string[]) => AxiosPromise,
+  items: ITodoItem[],
   changeInputValue: (value: string) => IReducer,
-  initTodoList: () => void,
+  changeColumns: (value: IColumn[]) => IReducer,
+  changeTodoList: (value: ITodoItem[]) => IReducer,
   messageError: (content: any, duration?: any, onClose?: any) => void,
   consoleError: (...data: any[]) => void
 ) => {
@@ -18,48 +17,32 @@ const useHandleInputKeyUp = (
     async (e: KeyboardEvent) => {
       // 13表示回车键
       if (e.keyCode === 13 && value) {
-        // 是否执行出错了
-        let isError = false;
         try {
           // 重置为空
           changeInputValue('');
           // 新增 todo 对象
-          await postTodoItem({
-            id: newId,
-            title: value,
-            level: todoLevel.init,
-            time: newTime,
-          });
-          // 在初始列表添加一个新的对象
-          const targetColumn: IColumn = columns.find(o => o.type === todoLevelType.init) as IColumn;
-          // 获取计划列中的ID数组
-          const ids = Array.from(targetColumn.taskIds);
-          // 在数组头部插入新的ID
-          ids.unshift(newId);
+          changeTodoList([...items, { id: newId, title: value, level: todoLevel.init, time: newTime }]);
           // 修改 计划列 中的ID数组
-          await patchTodoColumn(targetColumn.id, ids);
+          const newColumns: IColumn[] = columns.map(column => {
+            if (column.type === todoLevelType.init) {
+              // 插入新的数据
+              column.taskIds.unshift(newId);
+              return {
+                ...column,
+                taskIds: column.taskIds,
+              };
+            }
+            return column;
+          });
+          // 保存到 redux
+          changeColumns(newColumns);
         } catch (err) {
           consoleError('新增todo失败:', err);
           messageError('新增todo失败');
-          // 标记为执行出错
-          isError = true;
         }
-        // 重新获取数组, 这里重新获取数组，失败也无所谓，重点是上面的操作不能失败
-        !isError && initTodoList();
       }
     },
-    [
-      newId,
-      newTime,
-      value,
-      columns,
-      postTodoItem,
-      patchTodoColumn,
-      changeInputValue,
-      initTodoList,
-      messageError,
-      consoleError,
-    ]
+    [newId, newTime, value, columns, items, changeInputValue, changeColumns, changeTodoList, messageError, consoleError]
   );
 };
 

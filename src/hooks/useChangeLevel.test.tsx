@@ -1,148 +1,116 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { AxiosPromise } from 'axios';
 import useChangeLevel from './useChangeLevel';
 import jsonData from '../mock/data.json';
+import { todoLevel, todoLevelType } from '../pages/TodoList/variables';
+import { cloneDeep } from 'lodash';
 
 const changeColumns = jest.fn();
 const changeTodoList = jest.fn();
-const patchTodoItem = jest.fn();
-const patchTodoColumn = jest.fn();
-const initTodoList = jest.fn();
 const messageError = jest.fn();
 const consoleError = jest.fn();
-const errorFunc = (item?: any) =>
-  new Promise((resolve, reject) => {
-    reject('出错了');
-  }) as AxiosPromise;
-
-const items = jsonData.list;
-const item = items[0];
-const column = {
-  id: 0,
-  type: 'init',
-  title: '已规划的任务',
-  taskIds: ['jsYX72krD', 'Kk9w2ZuTF', 'yoWGZqX6k'],
+const errorFunc = (item?: any) => {
+  throw new Error('出错了!');
 };
-const columns = jsonData.columns;
+
+// 初始化数据
+let data = cloneDeep(jsonData);
+let items = data.list;
+let item = items.find(o => o.level === todoLevel.init) as ITodoItem;
+let columns = data.columns;
+let column = columns.find(o => o.type === todoLevelType.init) as IColumn;
+
+const init = async () => {
+  const { result } = await renderHook(() =>
+    useChangeLevel(columns, changeColumns, items, changeTodoList, messageError, consoleError)
+  );
+  return result;
+};
+
+beforeEach(() => {
+  // 每次重置被修改的数据，因为这些不是mock数据，不会被重置
+  data = cloneDeep(jsonData);
+  items = data.list;
+  item = items.find(o => o.level === todoLevel.init) as ITodoItem;
+  columns = data.columns;
+  column = columns.find(o => o.type === todoLevelType.init) as IColumn;
+
+  jest.restoreAllMocks();
+});
 
 describe('测试 useChangeLevel 自定义 Hook', () => {
-  it('正常处理', async () => {
-    const { result } = await renderHook(() =>
-      useChangeLevel(
-        columns,
-        changeColumns,
-        patchTodoColumn,
-        items,
-        changeTodoList,
-        patchTodoItem,
-        initTodoList,
-        messageError,
-        consoleError
-      )
-    );
+  it('正常处理: type init', async () => {
+    const result = await init();
 
     await act(() => result.current(column, item, 0));
 
-    // 当前设计：todo对象的 level 就是 column 的 id, 这样可以优化很多逻辑
-    let targetColumnId: number = 0;
-
-    // 生成新的目标ID
-    let sourceColumnIds: string[] = column.taskIds.filter(id => id !== item.id);
-    let targetColumnIds: string[] = [];
-    // 获取每个列的新ID数组
-    const arr = columns.map(row => {
-      switch (row.id) {
-        // 当前列 和 目标列，肯定不是同一个列
-        case column.id:
-          return {
-            ...row,
-            taskIds: sourceColumnIds,
-          };
-        case targetColumnId:
-          row.taskIds.unshift(item.id);
-          // 处理后的元素
-          targetColumnIds = row.taskIds;
-          return {
-            ...row,
-            taskIds: targetColumnIds,
-          };
-        default:
-          // 其他直接返回即可
-          return row;
-      }
-    });
-    // 更新todo对象数组
-    const newItems = items.map(row => {
-      if (row.id === item.id) {
-        return {
-          ...row,
-          level: 0,
-        };
-      }
-      return row;
-    });
-    expect(changeColumns).toBeCalledWith(arr);
-    // 更新todo到redux中，让页面看起来更顺滑
-    expect(changeTodoList).toBeCalledWith(newItems);
-    expect(patchTodoColumn).toHaveBeenNthCalledWith(1, column.id, sourceColumnIds);
-    expect(patchTodoColumn).toHaveBeenNthCalledWith(2, targetColumnId, targetColumnIds);
-    expect(patchTodoItem).toBeCalledWith(item.id, 'level', 0);
-    expect(initTodoList).toBeCalled();
+    expect(changeColumns).toBeCalledWith([
+      { id: 0, taskIds: ['Kk9w2ZuTF', 'yoWGZqX6k'], title: '已规划的任务', type: 'init' },
+      { id: 1, taskIds: ['mJwzfBnyx', 'qamhI4FeH'], title: '执行中的任务', type: 'progress' },
+      { id: 2, taskIds: ['r2sxR9jKg', 'Yg4R_bjc4'], title: '已完成的任务', type: 'done' },
+    ]);
+    expect(changeTodoList).toBeCalledWith([
+      { id: 'r2sxR9jKg', level: 2, time: 1622942487518, title: '买一辆车' },
+      { id: 'Yg4R_bjc4', level: 2, time: 1622942492375, title: '买一套房' },
+      { id: 'mJwzfBnyx', level: 1, time: 1622942498319, title: '娶个老婆' },
+      { id: 'jsYX72krD', level: 0, time: 1622942592814, title: '生个孩子' },
+      { id: 'qamhI4FeH', level: 1, time: 1622942510906, title: '事业有成' },
+      { id: 'Kk9w2ZuTF', level: 0, time: 1622942517578, title: '功成名就' },
+      { id: 'yoWGZqX6k', level: 0, time: 1624034429002, title: '人生巅峰' },
+    ]);
   });
 
-  it('异常处理1', async () => {
-    const { result } = await renderHook(() =>
-      useChangeLevel(
-        columns,
-        changeColumns,
-        errorFunc,
-        items,
-        changeTodoList,
-        errorFunc,
-        errorFunc,
-        messageError,
-        consoleError
-      )
-    );
+  it('正常处理: type progress', async () => {
+    const result = await init();
 
-    // 在异常处理中，不要加入异常方法，否则这里会直接报错（真的有异常，在这里处理异常就可以了。）
-    await act(() => result.current(column, item, 0));
-
-    // 报错调用断言
-    expect(consoleError).toBeCalled();
-    expect(messageError).toBeCalled();
-
-    // 下面两个函数，赋值的时候调用了，出错回滚的时候，也调用了一次，一共两次。
-    // 这里就不写具体的调用传参了，没有意义。
-    expect(changeColumns).toBeCalledTimes(2);
-    expect(changeTodoList).toBeCalledTimes(2);
-  });
-
-  it('异常处理1', async () => {
-    const { result } = await renderHook(() =>
-      useChangeLevel(
-        columns,
-        changeColumns,
-        errorFunc,
-        items,
-        changeTodoList,
-        errorFunc,
-        errorFunc,
-        messageError,
-        consoleError
-      )
-    );
-
-    // 在异常处理中，不要加入异常方法，否则这里会直接报错（真的有异常，在这里处理异常就可以了。）
     await act(() => result.current(column, item, 1));
 
+    expect(changeColumns).toBeCalledWith([
+      { id: 0, taskIds: ['Kk9w2ZuTF', 'yoWGZqX6k'], title: '已规划的任务', type: 'init' },
+      { id: 1, taskIds: ['jsYX72krD', 'mJwzfBnyx', 'qamhI4FeH'], title: '执行中的任务', type: 'progress' },
+      { id: 2, taskIds: ['r2sxR9jKg', 'Yg4R_bjc4'], title: '已完成的任务', type: 'done' },
+    ]);
+    expect(changeTodoList).toBeCalledWith([
+      { id: 'r2sxR9jKg', level: 2, time: 1622942487518, title: '买一辆车' },
+      { id: 'Yg4R_bjc4', level: 2, time: 1622942492375, title: '买一套房' },
+      { id: 'mJwzfBnyx', level: 1, time: 1622942498319, title: '娶个老婆' },
+      { id: 'jsYX72krD', level: 1, time: 1622942592814, title: '生个孩子' },
+      { id: 'qamhI4FeH', level: 1, time: 1622942510906, title: '事业有成' },
+      { id: 'Kk9w2ZuTF', level: 0, time: 1622942517578, title: '功成名就' },
+      { id: 'yoWGZqX6k', level: 0, time: 1624034429002, title: '人生巅峰' },
+    ]);
+  });
+
+  it('正常处理: type done', async () => {
+    const result = await init();
+
+    await act(() => result.current(column, item, 2));
+
+    expect(changeColumns).toBeCalledWith([
+      { id: 0, taskIds: ['Kk9w2ZuTF', 'yoWGZqX6k'], title: '已规划的任务', type: 'init' },
+      { id: 1, taskIds: ['mJwzfBnyx', 'qamhI4FeH'], title: '执行中的任务', type: 'progress' },
+      { id: 2, taskIds: ['jsYX72krD', 'r2sxR9jKg', 'Yg4R_bjc4'], title: '已完成的任务', type: 'done' },
+    ]);
+    expect(changeTodoList).toBeCalledWith([
+      { id: 'r2sxR9jKg', level: 2, time: 1622942487518, title: '买一辆车' },
+      { id: 'Yg4R_bjc4', level: 2, time: 1622942492375, title: '买一套房' },
+      { id: 'mJwzfBnyx', level: 1, time: 1622942498319, title: '娶个老婆' },
+      { id: 'jsYX72krD', level: 2, time: 1622942592814, title: '生个孩子' },
+      { id: 'qamhI4FeH', level: 1, time: 1622942510906, title: '事业有成' },
+      { id: 'Kk9w2ZuTF', level: 0, time: 1622942517578, title: '功成名就' },
+      { id: 'yoWGZqX6k', level: 0, time: 1624034429002, title: '人生巅峰' },
+    ]);
+  });
+
+  it('异常处理', async () => {
+    const { result } = await renderHook(() =>
+      useChangeLevel(columns, errorFunc, items, errorFunc, messageError, consoleError)
+    );
+
+    // 在异常处理中，不要加入异常方法，否则这里会直接报错（真的有异常，在这里处理异常就可以了。）
+    await act(() => result.current(column, item, 0));
+
     // 报错调用断言
     expect(consoleError).toBeCalled();
     expect(messageError).toBeCalled();
-
-    // 下面两个函数，赋值的时候调用了，出错回滚的时候，也调用了一次，一共两次。
-    // 这里就不写具体的调用传参了，没有意义。
-    expect(changeColumns).toBeCalledTimes(2);
-    expect(changeTodoList).toBeCalledTimes(2);
   });
 });

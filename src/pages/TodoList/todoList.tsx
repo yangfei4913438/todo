@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import shortid from 'shortid';
 import { message } from 'antd';
-import todo from '../../http/todo';
 
 import Header from '../../components/Header/header';
 import List from '../../components/List/list';
@@ -26,30 +25,10 @@ const TodoList: React.FC<IProps> = ({ actions, value, items, columns }) => {
   useTodoListInit(items, initTodoList);
 
   // 修改 todo 状态会触发
-  const changeLevel = useChangeLevel(
-    columns,
-    changeColumns,
-    todo.patchTodoColumn,
-    items,
-    changeTodoList,
-    todo.patchTodoItem,
-    initTodoList,
-    message.error,
-    console.error
-  );
+  const changeLevel = useChangeLevel(columns, changeColumns, items, changeTodoList, message.error, console.error);
 
   // 拖拽放置会触发
-  const onDragEnd = useDropEnd(
-    columns,
-    changeColumns,
-    todo.patchTodoColumn,
-    items,
-    changeTodoList,
-    todo.patchTodoItem,
-    initTodoList,
-    message.error,
-    console.error
-  );
+  const onDragEnd = useDropEnd(columns, changeColumns, items, changeTodoList, message.error, console.error);
 
   // 回车添加数据
   const handleInputKeyUp = useHandleInputKeyUp(
@@ -57,10 +36,10 @@ const TodoList: React.FC<IProps> = ({ actions, value, items, columns }) => {
     new Date().getTime(),
     value,
     columns,
-    todo.postTodoItem,
-    todo.patchTodoColumn,
+    items,
     changeInputValue,
-    initTodoList,
+    changeColumns,
+    changeTodoList,
     message.error,
     console.error
   );

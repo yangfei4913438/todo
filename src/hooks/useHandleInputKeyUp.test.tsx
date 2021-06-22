@@ -2,51 +2,76 @@ import { KeyboardEvent } from 'react';
 import shortid from 'shortid';
 import { renderHook, act } from '@testing-library/react-hooks';
 import useHandleInputKeyUp from './useHandleInputKeyUp';
-import { AxiosPromise } from 'axios';
 import { todoLevel, todoLevelType } from '../pages/TodoList/variables';
+import jsonData from '../mock/data.json';
+import { cloneDeep } from 'lodash';
 
-const newId = shortid.generate();
-const newTime = new Date().getTime();
-const userInput = 'hello world';
-const column = {
-  id: 0,
-  type: 'init',
-  title: '已规划的任务',
-  taskIds: ['jsYX72krD', 'Kk9w2ZuTF', 'yoWGZqX6k'],
-};
-const columns = [column];
-const postTodoItem = jest.fn();
-const patchTodoColumn = jest.fn();
 const changeInputValue = jest.fn();
-const initTodoList = jest.fn();
+const changeColumns = jest.fn();
+const changeTodoList = jest.fn();
 const messageError = jest.fn();
 const consoleError = jest.fn();
 const errorFunc = (item?: any) => {
-  return new Promise((resolve, reject) => {
-    throw new Error('出错了');
-  }) as AxiosPromise;
+  throw new Error('出错了!');
 };
 
-const errorFunc2 = (args?: any) => {
-  throw new Error('出错了');
+const newId = shortid.generate();
+const newTime = new Date().getTime();
+let userInput = 'hello world';
+let columns = cloneDeep(jsonData.columns);
+let column = columns.find(column => column.type === todoLevelType.init) as IColumn;
+let items = cloneDeep(jsonData.list);
+
+const init = async () => {
+  const { result } = await renderHook(() =>
+    useHandleInputKeyUp(
+      newId,
+      newTime,
+      userInput,
+      columns,
+      items,
+      changeInputValue,
+      changeColumns,
+      changeTodoList,
+      messageError,
+      consoleError
+    )
+  );
+  return result;
 };
+
+const initErr = async () => {
+  const { result } = await renderHook(() =>
+    useHandleInputKeyUp(
+      newId,
+      newTime,
+      userInput,
+      columns,
+      items,
+      errorFunc,
+      errorFunc,
+      errorFunc,
+      messageError,
+      consoleError
+    )
+  );
+  return result;
+};
+
+beforeEach(() => {
+  jest.resetAllMocks();
+  jest.restoreAllMocks();
+  jest.clearAllMocks();
+  // 重置一下，默认是有值的
+  userInput = 'hello world';
+  columns = cloneDeep(jsonData.columns);
+  column = columns.find(column => column.type === todoLevelType.init) as IColumn;
+  items = cloneDeep(jsonData.list);
+});
 
 describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
   it('输入内容非空，且按下了回车', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        userInput,
-        columns,
-        postTodoItem,
-        patchTodoColumn,
-        changeInputValue,
-        initTodoList,
-        messageError,
-        consoleError
-      )
-    );
+    const result = await init();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 13,
@@ -56,39 +81,37 @@ describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
 
     expect(changeInputValue).toBeCalledWith('');
 
-    expect(postTodoItem).toBeCalledWith({
-      id: newId,
-      title: userInput,
-      level: todoLevel.init,
-      time: newTime,
+    expect(changeTodoList).toBeCalledWith([
+      ...items,
+      {
+        id: newId,
+        title: userInput,
+        level: todoLevel.init,
+        time: newTime,
+      },
+    ]);
+
+    // 修改 计划列 中的ID数组
+    const newColumns: IColumn[] = columns.map(column => {
+      if (column.type === todoLevelType.init) {
+        // 插入新的数据
+        column.taskIds.unshift(newId);
+        return {
+          ...column,
+          taskIds: column.taskIds,
+        };
+      }
+      return column;
     });
+    expect(changeColumns).toBeCalledWith(newColumns);
 
-    // 在初始列表添加一个新的对象
-    const targetColumn: IColumn = columns.find(o => o.type === todoLevelType.init) as IColumn;
-    // 获取计划列中的ID数组
-    const ids = Array.from(targetColumn.taskIds);
-    // 在数组头部插入新的ID
-    ids.unshift(newId);
-    expect(patchTodoColumn).toBeCalledWith(targetColumn.id, ids);
-
-    expect(initTodoList).toBeCalled();
+    expect(messageError).not.toBeCalled();
+    expect(consoleError).not.toBeCalled();
   });
 
   it('value为空的情况', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        '',
-        columns,
-        postTodoItem,
-        patchTodoColumn,
-        changeInputValue,
-        initTodoList,
-        messageError,
-        consoleError
-      )
-    );
+    userInput = '';
+    const result = await init();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 13,
@@ -97,26 +120,15 @@ describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
     await act(() => result.current(kbEvent as KeyboardEvent));
 
     expect(changeInputValue).not.toBeCalled();
-    expect(postTodoItem).not.toBeCalled();
-    expect(patchTodoColumn).not.toBeCalled();
-    expect(initTodoList).not.toBeCalled();
+    expect(changeColumns).not.toBeCalled();
+    expect(changeTodoList).not.toBeCalled();
+
+    expect(messageError).not.toBeCalled();
+    expect(consoleError).not.toBeCalled();
   });
 
   it('键盘事件不是回车（不等于13）', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        userInput,
-        columns,
-        postTodoItem,
-        patchTodoColumn,
-        changeInputValue,
-        initTodoList,
-        messageError,
-        consoleError
-      )
-    );
+    const result = await init();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 14,
@@ -125,26 +137,16 @@ describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
     await act(() => result.current(kbEvent as KeyboardEvent));
 
     expect(changeInputValue).not.toBeCalled();
-    expect(postTodoItem).not.toBeCalled();
-    expect(patchTodoColumn).not.toBeCalled();
-    expect(initTodoList).not.toBeCalled();
+    expect(changeColumns).not.toBeCalled();
+    expect(changeTodoList).not.toBeCalled();
+
+    expect(messageError).not.toBeCalled();
+    expect(consoleError).not.toBeCalled();
   });
 
   it('value为空的情况 且 键盘事件不是回车（不等于13）', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        '',
-        columns,
-        postTodoItem,
-        patchTodoColumn,
-        changeInputValue,
-        initTodoList,
-        messageError,
-        consoleError
-      )
-    );
+    userInput = '';
+    const result = await init();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 14,
@@ -153,26 +155,15 @@ describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
     await act(() => result.current(kbEvent as KeyboardEvent));
 
     expect(changeInputValue).not.toBeCalled();
-    expect(postTodoItem).not.toBeCalled();
-    expect(patchTodoColumn).not.toBeCalled();
-    expect(initTodoList).not.toBeCalled();
+    expect(changeColumns).not.toBeCalled();
+    expect(changeTodoList).not.toBeCalled();
+
+    expect(messageError).not.toBeCalled();
+    expect(consoleError).not.toBeCalled();
   });
 
   it('报错的情况', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        userInput,
-        columns,
-        errorFunc,
-        errorFunc,
-        errorFunc2,
-        errorFunc,
-        messageError,
-        consoleError
-      )
-    );
+    const result = await initErr();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 13,
@@ -187,20 +178,7 @@ describe('测试 useHandleInputKeyUp 自定义 Hook', () => {
   });
 
   it('报错的情况2', async () => {
-    const { result } = await renderHook(() =>
-      useHandleInputKeyUp(
-        newId,
-        newTime,
-        userInput,
-        columns,
-        errorFunc,
-        errorFunc,
-        errorFunc2,
-        errorFunc,
-        messageError,
-        consoleError
-      )
-    );
+    const result = await initErr();
 
     const kbEvent: Partial<KeyboardEvent> = {
       keyCode: 14,

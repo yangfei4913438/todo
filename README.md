@@ -6,7 +6,7 @@
 
 ## immutable.js 说明
 
-1、安装方法
+一、安装方法
 
 ```shell
 # 安装库
@@ -15,17 +15,41 @@ yarn add immutable redux-immutable
 yarn add @types/redux-immutable -D
 ```
 
-2、使用方法
+二、使用方法
 
-- 使用 fromJS 初始化你的基础数据，数据类型为 Record<IState>
+使用的时候，只要注意三个地方即可。
 
-- reducer 中设置值的时候，直接 state.set('inputValue', action.value); 即可实现数据更新。
-  inputValue 是要被更新的key,
-  action.value 就是正常的redux 传递的值，无需处理成 immutable 类型数据。
+1、初始化数据
 
-- 取数据的时候，因为我是通过合并 reducer 的方式导出的，所以取值，需要通过 state.getIn(['todo', 'inputValue']) 来获取值。 取出来的值，就是普通的js类型，无需转换。
-  todo 表示当前的 reducer path,
-  inputValue 表示 todo 这个 reducer 中 state 的 key
+使用 fromJS 初始化你的基础数据，数据类型为 Record<IState>
+
+2、在reducer中更新数据
+
+- 单个数据更新 state.set()
+  ```typescript
+  state.set('inputValue', action.value);
+  ```
+  - inputValue 是要被更新的key;
+
+  - action.value 就是正常的redux 传递的值，无需处理成 immutable 类型数据。
+
+
+- 多个数据更新 state.merge()
+
+  ```typescript
+  state.merge({
+    items: action.value.items,
+    columns: action.value.columns,
+  });
+  ```
+
+3、在connect时取出数据
+
+取数据的时候，因为我是通过合并 reducer 的方式导出的，所以取值，需要通过 state.getIn(['todo', 'inputValue']) 来获取值。 取出来的值，就是普通的js类型，无需转换。
+
+- todo 表示当前的 reducer path；
+
+- inputValue 表示 todo 这个 reducer 中 state 的 key
 
 具体用法见代码，很简单的。
 
