@@ -13,6 +13,7 @@ const mapState = (state: Record<IStore>) => {
     // 取值的时候，需要加上 keyPath
     value: state.getIn(['todo', 'inputValue']),
     items: state.getIn(['todo', 'items']),
+    columns: state.getIn(['todo', 'columns']),
   };
 };
 

@@ -41,21 +41,23 @@ axios.interceptors.response.use(
           return Promise.reject(error.response);
         case 500: // 接口请求发生系统级别错误
           await message.error(error.response.statusText);
-          break;
+          return Promise.reject(500);
         case 401: // 没有提供认证信息。session 过期/未登录.
           // 也可以处理为直接调用登出路由，当前demo系统中不存在，所以用刷新演示一下。
           await message.error('没有访问权限，请重新登录.', 1000, () => window.location.reload);
           break;
         case 404:
           await message.error('请求的资源未找到');
-          break;
+          return Promise.reject(404);
         default:
           // 其他情况，统一处理
           await message.error(error.response.statusText);
+          return Promise.reject(error.response.state);
       }
     } else {
       // 拿不到状态码处理
       await message.error('目前无法连接到服务器，请联系您的网络管理员处理。');
+      return Promise.reject();
     }
   }
 );

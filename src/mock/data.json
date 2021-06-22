@@ -40,7 +40,27 @@
       "id": "yoWGZqX6k",
       "title": "人生巅峰",
       "level": 0,
-      "time": 1622942527794
+      "time": 1624034429002
+    }
+  ],
+  "columns": [
+    {
+      "id": 0,
+      "type": "init",
+      "title": "已规划的任务",
+      "taskIds": ["jsYX72krD", "Kk9w2ZuTF", "yoWGZqX6k"]
+    },
+    {
+      "id": 1,
+      "type": "progress",
+      "title": "执行中的任务",
+      "taskIds": ["mJwzfBnyx", "qamhI4FeH"]
+    },
+    {
+      "id": 2,
+      "type": "done",
+      "title": "已完成的任务",
+      "taskIds": ["r2sxR9jKg", "Yg4R_bjc4"]
     }
   ]
 }

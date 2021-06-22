@@ -1,25 +1,40 @@
+@import 'src/styles/variables';
+
 .todo_item {
-  line-height: 25px;
+  font-size: 15px;
+  line-height: 35px;
   box-sizing: border-box;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  margin-bottom: 3px;
+  padding: 5px 5px;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
+  letter-spacing: 1px;
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.3);
 
   .todo_item_level {
+    border-left: 5px solid;
+    padding-left: 5px;
     width: 30px;
+    font-size: 14px;
   }
+  .todo_item_level_init {
+    border-left-color: $init-color;
+  }
+  .todo_item_level_progress {
+    border-left-color: $progress-color;
+  }
+  .todo_item_level_done {
+    border-left-color: $done-color;
+  }
+
   .todo_item_title {
     flex-grow: 1;
   }
 }
 
-.todo_item_active {
-  background-color: lightblue;
-}
-
-.todo_item_in_active {
-  background-color: lightgray;
+.todo_item_dragging {
+  font-weight: 400;
+  background-color: white;
 }

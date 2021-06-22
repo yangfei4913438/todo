@@ -5,14 +5,13 @@ import List from './list';
 import jsonData from '../../mock/data.json';
 
 let wrapper: ShallowWrapper;
-const actives = jsonData.list.filter(o => o.level !== 2);
-const inActives = jsonData.list.filter(o => o.level === 2);
+const items = jsonData.list;
+const columns = jsonData.columns;
 const changeLevel = jest.fn();
-const moveItem = jest.fn();
 
 beforeAll(() => {
   // 如果不是集成测试，需要测试组件之间的联动，就不需要使用 mount 来测。
-  wrapper = shallow(<List actives={actives} inActives={inActives} changeLevel={changeLevel} moveItem={moveItem} />);
+  wrapper = shallow(<List items={items} columns={columns} changeLevel={changeLevel} />);
 });
 
 describe('测试列表组件', () => {
@@ -21,27 +20,26 @@ describe('测试列表组件', () => {
     expect(wrapper).toHaveDisplayName('div');
     // 确认存在类名
     expect(wrapper).toHaveClassName('todo_list');
-    // 确认存在内部高阶组件
-    expect(wrapper).toContainMatchingElement('DropTarget(TodoItems)');
+    // 取出所有的内部DOM
+    const domList = wrapper.find('TodoColumn');
+    // 确认数量
+    expect(domList).toHaveLength(3);
   });
 
   it('测试内部组件', () => {
     // 取出所有的内部DOM
-    const domList = wrapper.find('DropTarget(TodoItems)');
-    // 确认数量
-    expect(domList).toHaveLength(2);
-    // 拆分列表
+    const domList = wrapper.find('TodoColumn');
+
+    // 测试第一个列
     const dom1 = domList.at(0);
-    const dom2 = domList.at(1);
+
+    const list: ITodoItem[] = columns[0].taskIds.map(id => {
+      return items.find(i => i.id === id) as ITodoItem;
+    });
+
     // 测试第一个组件的传入参数
-    expect(dom1).toHaveProp('type', 'active');
-    expect(dom1).toHaveProp('list', actives);
+    expect(dom1).toHaveProp('column', columns[0]);
+    expect(dom1).toHaveProp('list', list);
     expect(dom1).toHaveProp('changeLevel', changeLevel);
-    expect(dom1).toHaveProp('moveItem', moveItem);
-    // 测试第二个组件的传入参数
-    expect(dom2).toHaveProp('type', 'inActive');
-    expect(dom2).toHaveProp('list', inActives);
-    expect(dom2).toHaveProp('changeLevel', changeLevel);
-    expect(dom2).toHaveProp('moveItem', moveItem);
   });
 });

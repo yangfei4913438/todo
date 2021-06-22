@@ -28,10 +28,27 @@ describe('测试store', () => {
     type: types.CHANGE_TODO_LIST_VALUE,
     value: jsonData.list,
   };
+  const expectedActionsNull = {
+    type: types.CHANGE_TODO_LIST_VALUE,
+    value: [],
+  };
+  const expectedActions2 = {
+    type: types.CHANGE_COLUMNS_VALUE,
+    value: jsonData.columns,
+  };
+  const expectedActions2Null = {
+    type: types.CHANGE_COLUMNS_VALUE,
+    value: [],
+  };
 
   afterEach(() => {
-    // 每次 mock 完成之后，重置mock, 避免互相影响
+    mockAxiosGet.mockRestore();
+    mockAxiosGet.mockReset();
+    mockAxiosGet.mockClear();
+    jest.clearAllMocks();
     jest.resetAllMocks();
+    jest.restoreAllMocks();
+    store.clearActions();
   });
 
   it('测试 index 导出内容', () => {
@@ -63,54 +80,41 @@ describe('测试store', () => {
     expect(actions.changeTodoList(value)).toEqual(expectedAction);
   });
 
-  it('测试初始化获取数据，成功', () => {
+  it('测试初始化获取数据，成功1：返回正常数据', async () => {
     // mock 正常返回数据
     mockAxiosGet.mockResolvedValueOnce({
       data: jsonData.list,
     });
+    mockAxiosGet.mockResolvedValueOnce({
+      data: jsonData.columns,
+    });
     // 调用请求进行测试。必须使用 return 的方式处理。
-    return store
-      .dispatch(actions.initTodoList())
-      .then(() => {
-        // 这里没到数据，只有 action
-        expect(store.getActions()).toEqual([expectedActions]);
-      })
-      .catch(() => {
-        // 如果失败，这里是空值
-        expect(store.getActions()).toEqual([]);
-      });
+    await store.dispatch(actions.initTodoList());
+    // 这里没到数据，只有 action
+    expect(store.getActions()).toEqual([expectedActions, expectedActions2]);
   });
 
-  it('测试初始化获取数据，失败1: 返回空值', () => {
-    // mock 返回正常，但是没有 data
-    mockAxiosGet.mockResolvedValueOnce({});
+  it('测试初始化获取数据，成功2: 返回空值', async () => {
+    // mock 返回正常，但是没有 data. 多次请求不要加上once
+    mockAxiosGet.mockResolvedValueOnce({
+      data: [],
+    });
+    mockAxiosGet.mockResolvedValueOnce({
+      data: [],
+    });
     // 调用请求进行测试。必须使用 return 的方式处理。
-    return store
-      .dispatch(actions.initTodoList())
-      .then(() => {
-        // 这里没到数据，只有 action
-        expect(store.getActions()).toEqual([expectedActions]);
-      })
-      .catch(() => {
-        // 如果失败，这里是空值
-        expect(store.getActions()).toEqual([]);
-      });
+    await store.dispatch(actions.initTodoList());
+    // 这里没到数据，只有 action
+    expect(store.getActions()).toEqual([expectedActionsNull, expectedActions2Null]);
   });
 
-  it('测试初始化获取数据，失败2: 执行出错', () => {
+  it('测试初始化获取数据，失败: 执行出错', async () => {
     // mock 返回异常
-    mockAxiosGet.mockRejectedValueOnce({});
+    mockAxiosGet.mockRejectedValue({});
     // 调用请求进行测试。必须使用 return 的方式处理。
-    return store
-      .dispatch(actions.initTodoList())
-      .then(() => {
-        // 这里没到数据，只有 action
-        expect(store.getActions()).toEqual([expectedActions]);
-      })
-      .catch(() => {
-        // 如果失败，这里是空值
-        expect(store.getActions()).toEqual([]);
-      });
+    await store.dispatch(actions.initTodoList());
+    // 如果失败，这里是空值
+    expect(store.getActions()).toEqual([]);
   });
 
   it('测试reducer: CHANGE_INPUT_VALUE', () => {
@@ -119,6 +123,7 @@ describe('测试store', () => {
       fromJS({
         inputValue,
         items: [],
+        columns: [],
       })
     );
   });
@@ -129,8 +134,20 @@ describe('测试store', () => {
     const data: Record<IState> = fromJS({
       inputValue: '',
       items,
+      columns: [],
     });
     expect(reducer(undefined, { type: types.CHANGE_TODO_LIST_VALUE, value: items })).toEqual(data);
+  });
+
+  it('测试reducer: CHANGE_COLUMNS_VALUE', () => {
+    // 因为 reducer 返回的是 immutable 对象，所以外部数据要进行处理
+    const columns: Record<IColumn> = fromJS(jsonData.columns);
+    const data: Record<IState> = fromJS({
+      inputValue: '',
+      items: [],
+      columns,
+    });
+    expect(reducer(undefined, { type: types.CHANGE_COLUMNS_VALUE, value: columns })).toEqual(data);
   });
 
   it('测试reducer: 未知类型', () => {
@@ -139,6 +156,7 @@ describe('测试store', () => {
       fromJS({
         inputValue: '',
         items: [],
+        columns: [],
       })
     );
   });

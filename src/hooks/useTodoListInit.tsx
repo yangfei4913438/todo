@@ -5,8 +5,6 @@ const useTodoListInit = (items: ITodoItem[], initTodoList: () => void) => {
     // 如果当前不存在，就去加载远程的
     if (!items?.length) {
       initTodoList();
-    } else {
-      // console.log('拿到items:', items);
     }
   }, [items, initTodoList]);
 };

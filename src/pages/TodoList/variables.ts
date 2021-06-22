@@ -1,8 +1,14 @@
 export enum todoLevel {
   init,
-  start,
-  end,
+  progress,
+  done,
 }
+
+export const todoLevelType = {
+  init: 'init',
+  progress: 'progress',
+  done: 'done',
+};
 
 export const ItemType = {
   item: 'TODO_ITEM',
