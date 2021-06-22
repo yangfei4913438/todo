@@ -33,8 +33,8 @@ afterEach(() => {
 
 describe('测试 TodoList 组件', () => {
   it('检测初始渲染状态', () => {
-    // 外部请求回来的数据，需要重新渲染
-    wrapper.update();
+    // 异步请求回来的数据，需要重新渲染
+    // wrapper.update();
 
     // 检测输入内容
     const header = wrapper.find('Header');
@@ -73,5 +73,26 @@ describe('测试 TodoList 组件', () => {
     expect(thirdColumnIcon).toHaveText('2');
     const thirdTodoItems = todoColumns.at(2).find('TodoItem');
     expect(thirdTodoItems).toHaveLength(2);
+  });
+
+  it('集成测试: 用户输入后，已规划任务中出现新增的任务', () => {
+    // 拿到输入框
+    const inputElem = wrapper.find('.header_input');
+    // 定义用户输入的内容
+    const userInput = '你知道个锤子';
+    // 模拟输入
+    inputElem.simulate('change', {
+      target: {
+        value: userInput,
+      },
+    });
+    // 模拟回车
+    inputElem.simulate('keyup', {
+      keyCode: 13,
+    });
+    // 找出所有的todo标题
+    const dom = wrapper.find('.todo_item_title');
+    // 断言第一个就是新增的数据
+    expect(dom.at(0)).toHaveText(userInput);
   });
 });
