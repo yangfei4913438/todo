@@ -8,9 +8,17 @@ declare interface ITodoItem {
   time: number;
 }
 
+declare interface IColumn {
+  id: number;
+  type: string;
+  title: string;
+  taskIds: string[];
+}
+
 declare interface IState {
   inputValue: string;
   items: ITodoItem[];
+  columns: IColumn[];
 }
 
 // 全局 store 的类型定义
@@ -28,5 +36,6 @@ declare interface IReducer {
 declare interface IActions {
   changeInputValue: (value: string) => IReducer;
   changeTodoList: (value: ITodoItem[]) => IReducer;
+  changeColumns: (value: IColumn[]) => IReducer;
   initTodoList: () => void;
 }

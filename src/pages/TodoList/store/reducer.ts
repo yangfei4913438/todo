@@ -5,6 +5,7 @@ import types from './types';
 const initialState: Record<IState> = fromJS({
   inputValue: '',
   items: [],
+  columns: [],
 });
 
 // 定义reducer
@@ -16,6 +17,8 @@ const reducer = (state: Record<IState> = initialState, action: IReducer): Record
       return state.set('inputValue', action.value);
     case types.CHANGE_TODO_LIST_VALUE:
       return state.set('items', action.value);
+    case types.CHANGE_COLUMNS_VALUE:
+      return state.set('columns', action.value);
     default:
       return state;
   }

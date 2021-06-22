@@ -9,6 +9,20 @@ const todo = {
     return axios.get('/list');
   },
   /**
+   * 获取列的内容
+   * */
+  getTodoColumns: () => {
+    return axios.get('/columns');
+  },
+  /**
+   * 更新列的属性
+   * */
+  patchTodoColumn: (columnId: number, taskIds: string[]) => {
+    return axios.patch(`/columns/${columnId}`, {
+      taskIds,
+    });
+  },
+  /**
    * 新增一个todo
    * */
   postTodoItem: (item: ITodoItem) => {
