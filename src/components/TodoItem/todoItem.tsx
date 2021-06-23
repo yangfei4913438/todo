@@ -61,7 +61,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ column, item, index, changeLevel })
               <div>{renderIcon(item.level)}</div>
             </Dropdown>
           </div>
-          <div className={'todo_item_title'}>{item.title}</div>
+          <div className={'todo_item_title'} data-testid="task-content">
+            {item.title}
+          </div>
         </div>
       )}
     </Draggable>

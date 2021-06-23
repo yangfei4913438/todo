@@ -14,7 +14,7 @@ export interface TodoItemsProps {
 
 const TodoColumn: React.FC<TodoItemsProps> = ({ column, list, changeLevel }) => {
   return (
-    <div className={'todo_list_column'}>
+    <div className={'todo_list_column'} data-testid={column.type}>
       <div className={'todo_list_title'}>
         <div className={'todo_list_title_text'}>{column.title}</div>
         <div

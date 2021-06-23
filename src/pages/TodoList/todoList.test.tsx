@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { Provider } from 'react-redux';
 
 import TodoList from './todoWrapper';
@@ -15,11 +14,9 @@ beforeAll(() => {
   root.id = 'root';
   document.body.appendChild(root);
   wrapper = mount(
-    <DragDropContext onDragEnd={() => {}}>
-      <Provider store={store}>
-        <TodoList />
-      </Provider>
-    </DragDropContext>,
+    <Provider store={store}>
+      <TodoList />
+    </Provider>,
     { attachTo: root }
   );
 });
