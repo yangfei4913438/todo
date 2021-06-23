@@ -48,7 +48,11 @@ yarn add @types/redux-immutable -D
 
 3、在connect时取出数据
 
-取数据的时候，因为我是通过合并 reducer 的方式导出的，所以取值，需要通过 state.getIn(['todo', 'inputValue']) 来获取值。 取出来的值，就是普通的js类型，无需转换。
+取数据的时候，因为我是通过合并 reducer 的方式导出的。
+
+所以取值，需要通过 state.getIn(['todo', 'inputValue']) 来获取值。
+
+取出来的值，就是普通的js类型，无需转换。
 
 - todo 表示当前的 reducer path；
 
