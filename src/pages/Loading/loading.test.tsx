@@ -35,9 +35,11 @@ describe('测试 Loading 页面', () => {
     expect(dom).toHaveLength(9);
 
     // 每个类都存在一个
-    Array.from({ length: 9 }, (_, i) => {
-      const row = wrapper.find(`.sk-cube${i + 1}`);
-      expect(row).toHaveLength(1);
+    const list = Array.from({ length: 9 }, (_, i) => {
+      return wrapper.find(`.sk-cube${i + 1}`);
     });
+
+    // 断言都存在
+    list.forEach(row => expect(row).toExist());
   });
 });
