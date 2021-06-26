@@ -19,7 +19,6 @@ const newId = shortid.generate();
 const newTime = new Date().getTime();
 let userInput = 'hello world';
 let columns = cloneDeep(jsonData.columns);
-let column = columns.find(column => column.type === todoLevelType.init) as IColumn;
 let items = cloneDeep(jsonData.list);
 
 const init = async () => {
@@ -65,7 +64,6 @@ beforeEach(() => {
   // 重置一下，默认是有值的
   userInput = 'hello world';
   columns = cloneDeep(jsonData.columns);
-  column = columns.find(column => column.type === todoLevelType.init) as IColumn;
   items = cloneDeep(jsonData.list);
 });
 
