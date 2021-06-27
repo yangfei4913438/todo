@@ -14,5 +14,5 @@ if [ "$current_branch" = "main" ] || [ "$current_branch" = "master" ] || [ "$cur
     exit 1
 fi
 
-# 普通分支，提交之前需要检测测试代码是否可以通过。
+# 推送代码之前，需要检测测试代码是否可以通过。
 yarn test:ci
