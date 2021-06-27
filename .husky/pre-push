@@ -1,4 +1,18 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+# 获取当前的分支
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+# 禁止直接 push 代码到主要分支
+if [ "$current_branch" = "main" ] || [ "$current_branch" = "master" ] || [ "$current_branch" = "develop" ]; then
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo ""
+    echo "禁止直接 push 代码到主要分支！"
+    echo ""
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    exit 1
+fi
+
+# 普通分支，提交之前需要检测测试代码是否可以通过。
 yarn test:ci
