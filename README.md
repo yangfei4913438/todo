@@ -7,9 +7,12 @@
 > 优秀的代码结构设计，百分百的测试覆盖率。
 >
 > 如果你在学习react，这是一个不容错过的示例项目。
->
-> 当前项目已经配置了 Jenkins 自动部署，当PR合并进 main 分支后，Jenkins 会自动发布新的站点。
 
+## Jenkins
+
+当前项目已经配置了 Jenkins 自动部署，当PR合并进 main 分支后，Jenkins 会自动发布新的站点。
+
+访问地址: [https://jenkins.yangfei.org.cn/](https://jenkins.yangfei.org.cn/)
 
 ## immutable.js 说明
 
