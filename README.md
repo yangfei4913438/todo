@@ -8,9 +8,10 @@
 >
 > 如果你在学习react，这是一个不容错过的示例项目。
 
-## Jenkins
+## Jenkins && travis-ci
 
-当前项目已经配置了基于 Jenkins 的 CI，CD，提交PR后会自动触发PR检查，当 PR 合并进 main 分支后，Jenkins 会自动发布新的站点。
+Jenkins 的 ci 目前测试下来，体验无法和 travis-ci 相比，所以 CI 部分放在了 travis-ci 去做。
+cd 的部分是通过Jenkins来做的，目前看下来还是OK的。
 
 访问地址: [https://jenkins.yangfei.org.cn/](https://jenkins.yangfei.org.cn/)
 
