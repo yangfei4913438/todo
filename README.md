@@ -118,3 +118,5 @@ CRA 的默认配置文件位置: `react-scripts/scripts/utils/createJestConfig`
 ```
 
 > 注意: 如果要包含或排除某个文件夹下的所有文件，那么必须在路径后面跟上 `**/*`, 直接加个目录是不生效的。
+
+123
