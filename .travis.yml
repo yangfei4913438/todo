@@ -30,13 +30,11 @@ install:
 script:
   - yarn test
   - yarn build
-  - mv build /tmp
+  - tar -zcf build.tgz build
+  - mv build.tgz /tmp
 # 执行部署脚本
 deploy:
   provider: script
   script: bash scripts/deploy.sh
   on:
     branch: main
-# 执行部署脚本后执行
-after_deploy:
-  - rm -rf /tmp/build
