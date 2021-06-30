@@ -1,8 +1,7 @@
 # 语言是nodejs
 language: node_js
 # nodejs 的版本，标准版
-node_js:
-  - "stable"
+node_js: stable
 # 缓存
 cache:
   yarn: true
@@ -17,4 +16,20 @@ env:
 # 监听的分支
 branches:
   only:
-    - main #设置只监听哪个分支
+    - main
+# 运行脚本
+script:
+  - yarn build
+# 秘钥
+before_install:
+- openssl aes-256-cbc -K $encrypted_5c2966cbe882_key -iv $encrypted_5c2966cbe882_iv
+  -in id_rsa.enc -out ~/.ssh/id_rsa -d
+# 添加 SSH 信任列表
+addons:
+  ssh_known_hosts: yangfei.org.cn
+# 执行部署脚本
+after_success:
+  - rm -rf root@yangfei.org.cn:/var/www/build
+  - scp -o stricthostkeychecking=no -r ./dist/* root@yangfei.org.cn:/var/www/build
+  on:
+    branch: main
