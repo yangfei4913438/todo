@@ -15,4 +15,4 @@ if [ "$current_branch" = "main" ] || [ "$current_branch" = "master" ] || [ "$cur
 fi
 
 # 推送代码之前，需要检测测试代码是否可以通过。
-yarn test:ci
+yarn test

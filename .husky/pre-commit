@@ -15,7 +15,7 @@ if [ "$current_branch" = "main" ] || [ "$current_branch" = "master" ] || [ "$cur
 fi
 
 # 提交代码之前，需要检测测试代码是否可以通过。
-yarn test:ci
+yarn test
 
 # 提交代码之前，检测是否符合代码规范
 yarn lint

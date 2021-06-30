@@ -27,8 +27,7 @@
     "build": "react-scripts build",
     "cover": "react-scripts test --coverage --no-cache --watchAll=false --maxWorkers=8",
     "tdd": "react-scripts test",
-    "test": "react-scripts test --no-cache --watchAll=false --maxWorkers=8",
-    "test:ci": "cross-env CI=true react-scripts test --no-cache --maxWorkers=8",
+    "test": "cross-env CI=true react-scripts test --no-cache --maxWorkers=8",
     "eject": "react-scripts eject",
     "lint": "eslint --ext js,ts,tsx src --max-warnings 5",
     "prepare": "husky install"
