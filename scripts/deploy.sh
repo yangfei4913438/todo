@@ -4,4 +4,4 @@
 scp -o stricthostkeychecking=no /tmp/build.tgz root@yangfei.org.cn:/var/www
 
 # 删除远程的文件 解压 然后删除压缩包
-ssh -o stricthostkeychecking=no root@yangfei.org.cn "rm -rf /var/www/build; tar -zxf /var/www/build.tgz; rm -f /var/www/build.tgz"
+ssh -o stricthostkeychecking=no root@yangfei.org.cn "tar -zxf /var/www/build.tgz"
