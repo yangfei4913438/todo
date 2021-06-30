@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # 构建前端代码
+yarn
 yarn build
 
 # 删除远程的文件
