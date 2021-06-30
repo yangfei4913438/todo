@@ -28,5 +28,5 @@ addons:
   ssh_known_hosts: yangfei.org.cn
 # 执行部署脚本
 after_success:
-  - test $TRAVIS_BRANCH = "main" && rm -rf root@yangfei.org.cn:/var/www/build
+  - test $TRAVIS_BRANCH = "main" && rm -rf root@yangfei.org.cn:/var/www/build/*
   - test $TRAVIS_BRANCH = "main" && scp -o stricthostkeychecking=no -r ./dist/* root@yangfei.org.cn:/var/www/build
