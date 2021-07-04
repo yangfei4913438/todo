@@ -3,7 +3,7 @@ name: test todo
 on:
   pull_request: # 提交PR的时候会触发
     branches:
-      - main
+      - main # 触发分支为 main 分支
     paths:
       - '.github/workflows/**'
       - 'src/**'
