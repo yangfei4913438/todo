@@ -1,3 +1,6 @@
+![main test](https://github.com/yangfei4913438/todo/actions/workflows/test.yml/badge.svg)
+![main deploy](https://github.com/yangfei4913438/todo/actions/workflows/deploy.yml/badge.svg)
+
 ## 项目说明
 
 > 使用了 react hooks 来进行开发的 todoList 项目，支持拖拽。
