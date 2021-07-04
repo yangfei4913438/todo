@@ -8,12 +8,9 @@
 >
 > 如果你在学习react，这是一个不容错过的示例项目。
 
-## Jenkins && travis-ci
+## GitHub Actions
 
-Jenkins 的 ci 目前测试下来，体验无法和 travis-ci 相比，所以 CI 部分放在了 travis-ci 去做。
-cd 的部分是通过Jenkins来做的，目前看下来还是OK的。
-
-访问地址: [https://jenkins.yangfei.org.cn/](https://jenkins.yangfei.org.cn/)
+CI, CD 使用 GitHub Actions, 目前应该是最佳选择了吧。。。
 
 ## immutable.js 说明
 
