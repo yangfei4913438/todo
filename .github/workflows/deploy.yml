@@ -3,7 +3,7 @@ name: deploy for main
 on:
   push: # 推送到主分支，合并PR的时候，会触发。主分支不能直接push, 所以这里必然是PR合并触发的。
     branches:
-      - 'main' # 只针对 main 分支
+      - main  # 触发分支为 main 分支
     paths: # 触发的文件路径
       - '.github/workflows/*'
       - 'src/**'
@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 14
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: install # will run `yarn install` command
+        with:
+          cmd: install # will run `yarn install` command
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: test # will run `yarn test` command
+        with:
+          cmd: test # will run `yarn test` command
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: build # will run `yarn build` command
+        with:
+          cmd: build # will run `yarn build` command
       - name: deploy # 部署
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
