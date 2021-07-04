@@ -19,14 +19,14 @@ jobs:
         with:
           node-version: 14
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: install # will run `yarn install` command
+        with:
+          cmd: install # will run `yarn install` command
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: test # will run `yarn test` command
+        with:
+          cmd: test # will run `yarn test` command
       - uses: borales/actions-yarn@v2.3.0
-          with:
-            cmd: build # will run `yarn build` command
+        with:
+          cmd: build # will run `yarn build` command
       - name: deploy # 部署
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
