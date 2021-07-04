@@ -1,4 +1,4 @@
-name: test todo
+name: test for main
 
 on:
   pull_request: # 提交PR的时候会触发
