@@ -1,7 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
-import { fromJS, Record } from 'immutable';
 
 import types from './types';
 import * as Index from './index';
@@ -78,61 +77,63 @@ describe('测试store', () => {
 
   it('测试reducer: CHANGE_INPUT_VALUE', () => {
     const inputValue = 'hello';
-    expect(reducer(undefined, { type: types.CHANGE_INPUT_VALUE, value: inputValue })).toEqual(
-      fromJS({
-        inputValue,
-        items: [],
-        columns: [],
-      })
-    );
+    const data = {
+      inputValue,
+      items: [],
+      columns: [],
+    };
+    // immutable对象必须转换为普通对象后，再进行比较否则会出问题。
+    const diff = reducer(undefined, {
+        type: types.CHANGE_INPUT_VALUE,
+        value: inputValue,
+      }).toObject()
+    expect(diff).toEqual(data);
   });
 
   it('测试reducer: CHANGE_TODO_LIST_VALUE', () => {
     // 因为 reducer 返回的是 immutable 对象，所以外部数据要进行处理
-    const items: Record<IState> = fromJS(jsonData.list);
-    const data: Record<IState> = fromJS({
+    const items = jsonData.list;
+    const data = {
       inputValue: '',
       items,
       columns: [],
-    });
-    expect(reducer(undefined, { type: types.CHANGE_TODO_LIST_VALUE, value: items })).toEqual(data);
+    };
+    expect(reducer(undefined, { type: types.CHANGE_TODO_LIST_VALUE, value: items }).toObject()).toEqual(data);
   });
 
   it('测试reducer: CHANGE_COLUMNS_VALUE', () => {
     // 因为 reducer 返回的是 immutable 对象，所以外部数据要进行处理
-    const columns: Record<IColumn> = fromJS(jsonData.columns);
-    const data: Record<IState> = fromJS({
+    const columns = jsonData.columns;
+    const data = {
       inputValue: '',
       items: [],
       columns,
-    });
-    expect(reducer(undefined, { type: types.CHANGE_COLUMNS_VALUE, value: columns })).toEqual(data);
+    };
+    expect(reducer(undefined, { type: types.CHANGE_COLUMNS_VALUE, value: columns }).toObject()).toEqual(data);
   });
 
   it('测试reducer: INIT_SYSTEM_DATA', () => {
     // 因为 reducer 返回的是 immutable 对象，所以外部数据要进行处理
-    const columns: Record<IColumn> = fromJS(jsonData.columns);
-    const items: Record<IState> = fromJS(jsonData.list);
-    const data: Record<IState> = fromJS({
+    const columns = jsonData.columns;
+    const items = jsonData.list;
+    const data = {
       inputValue: '',
       items,
       columns,
-    });
+    };
     const value = {
       items,
       columns,
     };
-    expect(reducer(undefined, { type: types.INIT_SYSTEM_DATA, value })).toEqual(data);
+    expect(reducer(undefined, { type: types.INIT_SYSTEM_DATA, value }).toObject()).toEqual(data);
   });
 
   it('测试reducer: 未知类型', () => {
     // 无效的 action 类型，返回的state, 就是初始的state
-    expect(reducer(undefined, { type: '', value: '' })).toEqual(
-      fromJS({
-        inputValue: '',
-        items: [],
-        columns: [],
-      })
-    );
+    expect(reducer(undefined, { type: '', value: '' }).toObject()).toEqual({
+      inputValue: '',
+      items: [],
+      columns: [],
+    });
   });
 });

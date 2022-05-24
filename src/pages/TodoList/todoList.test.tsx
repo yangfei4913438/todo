@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { Provider } from 'react-redux';
 
-import TodoList from './todoWrapper';
+import TodoList from './todoList';
 
 import store from '../../store';
 import jsonData from '../../mock/data.json';

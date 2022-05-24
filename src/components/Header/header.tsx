@@ -3,7 +3,7 @@ import './header.scss';
 
 interface HeaderProps {
   value: string;
-  changeInputValue: (value: string) => IReducer;
+  changeInputValue: (val: string) => IReducer;
   handleInputKeyUp: (e: KeyboardEvent) => void;
 }
 

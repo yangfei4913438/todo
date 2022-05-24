@@ -7,9 +7,9 @@ const useHandleInputKeyUp = (
   value: string,
   columns: IColumn[],
   items: ITodoItem[],
-  changeInputValue: (value: string) => IReducer,
-  changeColumns: (value: IColumn[]) => IReducer,
-  changeTodoList: (value: ITodoItem[]) => IReducer,
+  changeInputValue: (val: string) => IReducer,
+  changeColumns: (val: IColumn[]) => IReducer,
+  changeTodoList: (val: ITodoItem[]) => IReducer,
   messageError: (content: any, duration?: any, onClose?: any) => void,
   consoleError: (...data: any[]) => void
 ) => {
