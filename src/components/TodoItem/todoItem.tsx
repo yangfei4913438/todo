@@ -45,17 +45,16 @@ const TodoItem: React.FC<TodoItemProps> = ({ column, item, index, changeLevel })
           >
             <Dropdown
               overlay={
-                <Menu>
-                  {[todoLevel.init, todoLevel.progress, todoLevel.done]
+                <Menu
+                  items={[todoLevel.init, todoLevel.progress, todoLevel.done]
                     .filter(o => o !== item.level)
                     .map(row => {
-                      return (
-                        <Menu.Item key={row} onClick={() => changeLevel(column, item, row)}>
-                          {renderIcon(row, true)}
-                        </Menu.Item>
-                      );
+                      return {
+                        label: <div onClick={() => changeLevel(column, item, row)}>{renderIcon(row, true)}</div>,
+                        key: row,
+                      };
                     })}
-                </Menu>
+                />
               }
             >
               <div>{renderIcon(item.level)}</div>

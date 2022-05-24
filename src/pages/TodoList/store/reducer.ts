@@ -1,15 +1,15 @@
-import { fromJS, Record } from 'immutable';
+import { Record } from 'immutable';
 import types from './types';
 
 // 初始化对象，设置为不可变的immutable对象
-const initialState: Record<IState> = fromJS({
+const initialState = Record<TodoStore>({
   inputValue: '',
   items: [],
   columns: [],
-});
+})();
 
 // 定义reducer
-const reducer = (state: Record<IState> = initialState, action: IReducer): Record<IState> => {
+const reducer = (state: Record<TodoStore> = initialState, action: IReducer): Record<TodoStore> => {
   switch (action.type) {
     case types.CHANGE_INPUT_VALUE:
       // 设置值的时候，不需要加上 keyPath, 下同

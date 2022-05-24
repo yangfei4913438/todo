@@ -9,7 +9,7 @@ import {
   DND_DIRECTION_UP,
 } from 'react-beautiful-dnd-test-utils';
 
-import TodoList from './todoWrapper';
+import TodoList from './todoList';
 import { todoLevelType } from './variables';
 import store from '../../store';
 

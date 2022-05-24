@@ -1,7 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import shortid from 'shortid';
 import { message } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Record } from 'immutable';
+import { actions } from './store';
 
 import Header from '../../components/Header/header';
 import List from '../../components/List/list';
@@ -11,15 +14,16 @@ import useDropEnd from '../../hooks/useDropEnd';
 import useChangeLevel from '../../hooks/useChangeLevel';
 import useHandleInputKeyUp from '../../hooks/useHandleInputKeyUp';
 
-interface IProps {
-  actions: IActions;
-  value: string;
-  items: ITodoItem[];
-  columns: IColumn[];
-}
+const TodoList: React.FC = () => {
+  const dispatch = useDispatch();
 
-const TodoList: React.FC<IProps> = ({ actions, value, items, columns }) => {
-  const { initTodoList, changeInputValue, changeColumns, changeTodoList }: IActions = actions;
+  const data = useSelector<Record<GlobalKeypath>, TodoStore>(state => state.get('todo'));
+  const { inputValue: value, items, columns } = data;
+
+  const initTodoList = () => dispatch(actions.initTodoList());
+  const changeInputValue = useCallback((val: string) => dispatch(actions.changeInputValue(val)), [dispatch]);
+  const changeColumns = (val: IColumn[]) => dispatch(actions.changeColumns(val));
+  const changeTodoList = (val: ITodoItem[]) => dispatch(actions.changeTodoList(val));
 
   // 初始化数据
   useTodoListInit(items, initTodoList);

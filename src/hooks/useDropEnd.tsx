@@ -4,9 +4,9 @@ import { todoLevel, todoLevelType } from '../pages/TodoList/variables';
 
 const useDropEnd = (
   columns: IColumn[],
-  changeColumns: (value: IColumn[]) => IReducer,
+  changeColumns: (val: IColumn[]) => IReducer,
   items: ITodoItem[],
-  changeTodoList: (value: ITodoItem[]) => IReducer,
+  changeTodoList: (val: ITodoItem[]) => IReducer,
   messageError: (content: any, duration?: any, onClose?: any) => void,
   consoleError: (...data: any[]) => void
 ) => {

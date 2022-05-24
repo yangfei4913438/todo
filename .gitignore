@@ -2,8 +2,14 @@
 
 # dependencies
 /node_modules
-/.pnp
+.yarn
+
+.pnp.cjs
+.pnp.loader.mjs
+.pnp
 .pnp.js
+
+# ide
 .idea
 
 # testing

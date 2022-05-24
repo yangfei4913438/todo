@@ -2,11 +2,44 @@
   "name": "todo",
   "version": "0.1.0",
   "author": "Yang Fei",
-  "private": false,
   "license": "MIT",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "cover": "react-scripts test --coverage --no-cache --watchAll=false --maxWorkers=8",
+    "tdd": "react-scripts test",
+    "test": "cross-env CI=true react-scripts test --no-cache --maxWorkers=8",
+    "eject": "react-scripts eject",
+    "lint": "eslint --ext js,ts,tsx src --max-warnings 5",
+    "prepare": "husky install"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/http/**/*",
+      "!src/mock/**/*",
+      "!src/store/**/*",
+      "!src/**/store/**/index.{js,ts}",
+      "!src/index.tsx",
+      "!src/App.tsx"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
-    "antd": "^4.16.0",
+    "antd": "^4.20.6",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
     "immutable": "^4.0.0-rc.12",
@@ -22,47 +55,6 @@
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.16"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "cover": "react-scripts test --coverage --no-cache --watchAll=false --maxWorkers=8",
-    "tdd": "react-scripts test",
-    "test": "cross-env CI=true react-scripts test --no-cache --maxWorkers=8",
-    "eject": "react-scripts eject",
-    "lint": "eslint --ext js,ts,tsx src --max-warnings 5",
-    "prepare": "husky install"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts",
-      "!src/**/*Wrapper.tsx",
-      "!src/http/**/*",
-      "!src/mock/**/*",
-      "!src/store/**/*",
-      "!src/**/store/**/index.{js,ts}",
-      "!src/index.tsx",
-      "!src/App.tsx"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -71,7 +63,7 @@
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.170",
-    "@types/node": "^12.0.0",
+    "@types/node": "^17.0.35",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^17.0.0",
@@ -84,6 +76,8 @@
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
     "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
+    "eslint": "^7.32.0",
+    "eslint-config-react-app": "^7.0.1",
     "husky": "^6.0.0",
     "jest-enzyme": "^7.1.2",
     "node-sass": "^6.0.0",
@@ -91,6 +85,6 @@
     "react-beautiful-dnd-test-utils": "^3.2.1",
     "react-scripts": "4.0.3",
     "redux-mock-store": "^1.5.4",
-    "typescript": "^4.1.2"
+    "typescript": "^4.6.4"
   }
 }
