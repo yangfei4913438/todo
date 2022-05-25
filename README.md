@@ -5,8 +5,6 @@
 
 > 使用了 react hooks 来进行开发的 todoList 项目，支持拖拽。
 >
-> 优秀的代码结构设计，百分百的测试覆盖率。
->
 > 如果你在学习react，这是一个不容错过的示例项目。
 
 ## GitHub Actions
@@ -24,15 +22,7 @@ yarn add immutable redux-immutable
 yarn add @types/redux-immutable -D
 ```
 
-二、使用方法
-
-使用的时候，只要注意三个地方即可。
-
-1、初始化数据
-
-使用 fromJS 初始化你的基础数据，数据类型为 Record<IState>
-
-2、在reducer中更新数据
+二、在reducer中更新数据
 
 - 单个数据更新 state.set()
   ```typescript
@@ -52,19 +42,7 @@ yarn add @types/redux-immutable -D
   });
   ```
 
-3、在connect时取出数据
-
-取数据的时候，因为我是通过合并 reducer 的方式导出的。
-
-所以取值，需要通过 state.getIn(['todo', 'inputValue']) 来获取值。
-
-取出来的值，就是普通的js类型，无需转换。
-
-- todo 表示当前的 reducer path；
-
-- inputValue 表示 todo 这个 reducer 中 state 的 key
-
-具体用法见代码，很简单的。
+取数据，直接看代码即可，非常简单。
 
 ## 单元测试说明
 
